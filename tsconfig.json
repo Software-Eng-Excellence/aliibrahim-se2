@@ -4,10 +4,13 @@
     "module": "commonjs",
     "strict": true,
     "types": ["node"],
-    "baseUrl": "./src",
+    "rootDir": "./src",
     "outDir": "build",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
