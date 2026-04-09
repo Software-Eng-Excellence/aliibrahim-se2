@@ -24,6 +24,7 @@ const orderManager = new OrderManagement(
   new Validator(rules),
   new FinancialCalculator(),
 );
+
 for (const order of orders) {
   orderManager.addOrder(order.item, order.price);
 }
