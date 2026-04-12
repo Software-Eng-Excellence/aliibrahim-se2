@@ -5,7 +5,7 @@
 //Interface Segregation Principle
 //Dependency Inversion Principle
 
-interface Order {
+export interface Order {
   id: number;
   item: string;
 
@@ -22,9 +22,13 @@ export class OrderManagement {
     return this.orders;
   }
   addOrder(item: string, price: number): void {
-    const newOrder: Order = { id: this.orders.length + 1, item, price };
-    this.validator.validate(newOrder);
-    this.orders.push({ id: this.orders.length + 1, item, price });
+    try {
+      const newOrder: Order = { id: this.orders.length + 1, item, price };
+      this.validator.validate(newOrder);
+      this.orders.push({ id: this.orders.length + 1, item, price });
+    } catch (error: any) {
+      throw new Error(`Failed to add order: ${error.message}`);
+    }
   }
   getOrder(id: number): Order | undefined {
     return this.getOrders().find((order) => order.id === id);
@@ -52,7 +56,12 @@ interface IValidator {
   validate(order: Order): void;
 }
 export class Validator implements IValidator {
-  constructor(private rules: IValidator[]) {}
+  private rules: IValidator[] = [
+    new PriceValidator(),
+    new ItemValidator(),
+    new MaxPriceValidator(),
+  ];
+
   validate(order: Order): void {
     this.rules.forEach((rule) => rule.validate(order));
   }
