@@ -3,8 +3,8 @@
     "target": "es6",
     "module": "commonjs",
     "strict": true,
-    "types": ["node"],
-    "rootDir": "./src",
+    "types": ["node", "jest"],
+    "rootDir": ".",
     "outDir": "build",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -12,6 +12,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }

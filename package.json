@@ -9,12 +9,12 @@
     "prebuild": "npm run clean && npm run lint",
     "build": "tsc",
     "postbuild": "powershell -Command \"$size=(Get-ChildItem build -Recurse | Measure-Object -Property Length -Sum).Sum; Write-Host ('Build size: {0:N2} KB' -f ($size/1KB))\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npm run build",
     "start": "node build/index.js",
     "dev": "ts-node-dev --respawn src/index.ts",
     "format": "prettier \"src/**/*.{ts,js,json,md}\" --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
+    "@types/mocha": "^10.0.10",
     "eslint": "^10.0.2",
     "globals": "^17.4.0",
     "jest": "^30.3.0",
