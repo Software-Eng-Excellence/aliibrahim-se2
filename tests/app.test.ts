@@ -1,4 +1,9 @@
-import { OrderManagement, Validator, FinancialCalculator, Order } from '@/app';
+import {
+  OrderManagement,
+  Validator,
+  FinancialCalculator,
+  Order,
+} from '../src/app';
 describe('OrderManagement', () => {
   // before all, new validator and calculator instances
   // before each, create a new OrderManagement instance
