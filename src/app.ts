@@ -5,6 +5,8 @@
 //Interface Segregation Principle
 //Dependency Inversion Principle
 
+import logger from './util/logger';
+
 export interface Order {
   id: number;
   item: string;
@@ -31,7 +33,11 @@ export class OrderManagement {
     }
   }
   getOrder(id: number): Order | undefined {
-    return this.getOrders().find((order) => order.id === id);
+    const order = this.getOrders().find((order) => order.id === id);
+    if (!order) {
+      logger.warn(`Order with ID ${id} not found.`);
+    }
+    return order;
   }
   getTotalRevenue(): number {
     return this.calculator.getRevenue(this.orders);
@@ -111,6 +117,8 @@ export class MaxPriceValidator implements IValidator {
 export class PriceValidator implements IValidator {
   validate(order: Order): void {
     if (order.price <= 0) {
+      logger.error('Invalid price: ' + order.price);
+
       throw new Error(
         `Invalid price: ${order.price}. Price must be greater than zero.`,
       );
