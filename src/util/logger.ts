@@ -1,5 +1,8 @@
 import config from '../config';
 import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+
+// i will add here in this file the logger roller
 
 const { logDir, isDev } = config;
 const logFileFormat = winston.format.combine(
@@ -25,22 +28,37 @@ const logconsoleFormat = winston.format.combine(
 const logger = winston.createLogger({
   level: 'info',
   transports: [
-    new winston.transports.File({
-      filename: `error.log`,
+    new DailyRotateFile({
+      filename: `error-%DATE%.log`,
       dirname: logDir,
       level: 'error',
       format: logFileFormat,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+      auditFile: `${logDir}/error-audit.json`,
     }),
-    new winston.transports.File({
-      filename: `all.log`,
+    new DailyRotateFile({
+      filename: `all-%DATE%.log`,
       dirname: logDir,
       format: logFileFormat,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+      auditFile: `${logDir}/all-audit.json`,
     }),
   ],
   exceptionHandlers: [
-    new winston.transports.File({
-      filename: `exceptions.log`,
+    new DailyRotateFile({
+      filename: `exceptions-%DATE%.log`,
       dirname: logDir,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+      auditFile: `${logDir}/exceptions-audit.json`,
       format: logFileFormat,
     }),
   ],
