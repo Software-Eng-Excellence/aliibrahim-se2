@@ -1,0 +1,14 @@
+id,customer_name,cake_type,quantity,price,status,order_date
+1,John Doe,Chocolate,2,25.50,Completed,2026-04-10
+2,Jane Smith,Vanilla,1,15.00,Pending,2026-04-11
+3,Michael Brown,Red Velvet,3,45.00,Completed,2026-04-11
+4,Sarah Johnson,Black Forest,1,30.00,Cancelled,2026-04-12
+5,Chris Lee,Strawberry,2,28.00,Pending,2026-04-12
+6,Emily Davis,Chocolate,1,12.75,Completed,2026-04-12
+7,David Wilson,Vanilla,4,60.00,Pending,2026-04-13
+8,Olivia Martinez,Red Velvet,2,32.00,Completed,2026-04-13
+9,James Anderson,Black Forest,3,90.00,Cancelled,2026-04-14
+10,Emma Thomas,Strawberry,1,14.00,Completed,2026-04-14
+11,William Taylor,Chocolate,2,25.50,Pending,2026-04-15
+12,Isabella Moore,Vanilla,1,15.00,Completed,2026-04-15
+13,Alexander Jackson,Red Velvet,3,45.00,Pending,2026-04-16  

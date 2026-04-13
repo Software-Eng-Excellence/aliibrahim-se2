@@ -37,6 +37,8 @@
     "typescript-eslint": "^8.56.1"
   },
   "dependencies": {
+    "csv-parse": "^6.2.1",
+    "csv-stringify": "^6.7.0",
     "dotenv": "^17.3.1",
     "winston": "^3.19.0"
   }
