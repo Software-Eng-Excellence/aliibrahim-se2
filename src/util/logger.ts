@@ -53,4 +53,5 @@ if (isDev) {
   );
   logger.level = 'debug';
 }
+console.log(`Logger initialised. Logs will be saved to ${logDir}`);
 export default logger;
