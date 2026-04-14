@@ -2,8 +2,8 @@ node_modules/
 build/
 dist/
 
-.env
-.vscode/
+env
+vscode/
 coverage/
 
 *.log
