@@ -1,45 +1,95 @@
 import { readJSONFile, writeJSONFile } from '../src/parsers/jsonParser';
 import { promises as fs } from 'fs';
-// mock test to check valid file
 describe('JSON Parser', () => {
-  const testFilePath = './tests/test.json';
-  const testData = { name: 'Test', value: 42 };
+  afterEach(async () => {
+    await Promise.all([
+      fs.unlink('./tests/test.json').catch(() => {}),
+      fs.unlink('./tests/invalid.json').catch(() => {}),
+      fs.unlink('./tests/truncated.json').catch(() => {}),
+      fs.unlink('./tests/newTest.json').catch(() => {}),
+    ]);
+  });
+  describe('readJSONFile', () => {
+    beforeEach(async () => {
+      const jsonData = { name: 'Test', value: 42 };
+      await fs.writeFile(
+        './tests/test.json',
+        JSON.stringify(jsonData),
+        'utf-8',
+      );
+    });
+    it('should read valid JSON correctly', async () => {
+      // Act & Assert
+      expect(await readJSONFile('./tests/test.json')).toEqual({
+        name: 'Test',
+        value: 42,
+      });
+    });
 
-  beforeEach(async () => {
-    // Ensure the test file is reset before each test
-    await fs.writeFile(testFilePath, JSON.stringify(testData), 'utf-8');
+    it('should throw when file does not exist', async () => {
+      // Act & Assert
+      await expect(readJSONFile('./tests/missing.json')).rejects.toThrow(
+        'Error reading JSON file',
+      );
+    });
+
+    it('should throw for invalid JSON', async () => {
+      // Arrange
+      const invalidContent = `{"name": "Test", "value": 42,}`;
+      await fs.writeFile('./tests/invalid.json', invalidContent, 'utf-8');
+      // Act & Assert
+      await expect(readJSONFile('./tests/invalid.json')).rejects.toThrow(
+        'Error reading JSON file',
+      );
+    });
+    it('should throw for truncated JSON', async () => {
+      // Arrange
+      const truncatedContent = `{"name": "Test", "value": 42`;
+      await fs.writeFile('./tests/truncated.json', truncatedContent, 'utf-8');
+      // Act & Assert
+      await expect(readJSONFile('./tests/truncated.json')).rejects.toThrow(
+        'Error reading JSON file',
+      );
+    });
   });
-  it('should read JSON file correctly', async () => {
-    // Act
-    const data = await readJSONFile(testFilePath);
-    // Assert
-    expect(data).toEqual(testData);
-  });
-  it('should write JSON file correctly', async () => {
-    // Arrange
-    const newData = { name: 'New Test', value: 100 };
-    // Act
-    await writeJSONFile(testFilePath, newData);
-    const fileContent = await fs.readFile(testFilePath, 'utf-8');
-    // Assert
-    expect(JSON.parse(fileContent)).toEqual(newData);
-  });
-});
-// mock test to check invalid file
-describe('JSON Parser - Invalid File', () => {
-  const invalidFilePath = './tests/invalid.json';
-  beforeEach(async () => {
-    // Create an invalid JSON file
-    await fs.writeFile(invalidFilePath, 'This is not a valid JSON', 'utf-8');
-  });
-  it('should throw an error when reading invalid JSON file', async () => {
-    // Act & Assert
-    await expect(readJSONFile(invalidFilePath)).rejects.toThrow();
-  });
-  it('should throw an error when writing to an invalid path', async () => {
-    // Act & Assert
-    await expect(
-      writeJSONFile('/invalid/path/test.json', { test: 'data' }),
-    ).rejects.toThrow();
+
+  describe('writeJSONFile', () => {
+    beforeEach(async () => {
+      // Clean up any existing test files before each test
+      await Promise.all([fs.unlink('./tests/test.json').catch(() => {})]);
+    });
+
+    it('should write JSON correctly', async () => {
+      // Arrange
+      const data = { name: 'New Test', value: 100 };
+      const filePath = './tests/newTest.json';
+      // Act
+      await writeJSONFile(filePath, data);
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      // Assert
+      expect(JSON.parse(fileContent)).toEqual(data);
+    });
+
+    it('should overwrite existing JSON file', async () => {
+      // Arrange
+      const initialData = { name: 'Initial Test', value: 50 };
+      const updatedData = { name: 'Updated Test', value: 200 };
+      const filePath = './tests/test.json';
+      await writeJSONFile(filePath, initialData);
+      // Act
+      await writeJSONFile(filePath, updatedData);
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      //Assert
+      expect(JSON.parse(fileContent)).toEqual(updatedData);
+    });
+    it('should throw when writing to an invalid path', async () => {
+      // Arrange
+      const data = { name: 'Test', value: 42 };
+      const invalidPath = '/invalid/path/test.json';
+      // Act & Assert
+      await expect(writeJSONFile(invalidPath, data)).rejects.toThrow(
+        'Error writing JSON file',
+      );
+    });
   });
 });

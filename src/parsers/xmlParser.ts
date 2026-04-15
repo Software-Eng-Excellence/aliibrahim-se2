@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { XMLParser } from 'fast-xml-parser';
+import { XMLBuilder, XMLParser, XMLValidator } from 'fast-xml-parser';
 
 /****
  * Reads an XML file and returns its contents as a JavaScript object
@@ -10,6 +10,10 @@ import { XMLParser } from 'fast-xml-parser';
 export async function readXMLFile(filePath: string): Promise<any> {
   try {
     const xmlData = await fs.readFile(filePath, 'utf-8');
+    const validatation = XMLValidator.validate(xmlData);
+    if (validatation !== true) {
+      throw new Error(`Invalid XML: ${validatation.err.msg}`);
+    }
     const parser = new XMLParser();
     return parser.parse(xmlData);
   } catch (error) {
@@ -26,8 +30,8 @@ export async function readXMLFile(filePath: string): Promise<any> {
  */
 export async function writeXMLFile(filePath: string, data: any): Promise<void> {
   try {
-    const parser = new XMLParser();
-    const xmlContent = parser.parse(data);
+    const builder = new XMLBuilder();
+    const xmlContent = builder.build(data);
     await fs.writeFile(filePath, xmlContent, 'utf-8');
   } catch (error) {
     throw new Error(`Error writing XML file: ${error}`);
