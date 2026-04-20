@@ -8,7 +8,12 @@ export class ToyBuilder {
   private material!: string;
   private batteryRequired!: boolean;
   private educational!: boolean;
+<<<<<<< HEAD
 
+=======
+  private price!: number;
+  private quantity!: number;
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
   setToyType(toyType: string): ToyBuilder {
     this.toyType = toyType;
     return this;
@@ -33,7 +38,18 @@ export class ToyBuilder {
     this.educational = educational;
     return this;
   }
+<<<<<<< HEAD
 
+=======
+  setPrice(price: number): ToyBuilder {
+    this.price = price;
+    return this;
+  }
+  setQuantity(quantity: number): ToyBuilder {
+    this.quantity = quantity;
+    return this;
+  }
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
   build(): Toy {
     const fields = {
       toyType: this.toyType,
@@ -42,6 +58,11 @@ export class ToyBuilder {
       material: this.material,
       batteryRequired: this.batteryRequired,
       educational: this.educational,
+<<<<<<< HEAD
+=======
+      price: this.price,
+      quantity: this.quantity,
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
     };
     ToyValidator.validate(fields);
     return new Toy(fields);

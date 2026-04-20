@@ -27,6 +27,9 @@ export class ValidationUtils {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
   // use it for boolean fields
   static requireBoolean(value: unknown, fieldName: string): void {
     this.requireDefined(value, fieldName);
@@ -34,6 +37,9 @@ export class ValidationUtils {
       throw new Error(`Field must be a boolean: ${fieldName}`);
     }
   }
+<<<<<<< HEAD
 =======
 >>>>>>> fa3c358 (Adjusted the cake builder to maintain SRP and added the unit test for)
+=======
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
 }

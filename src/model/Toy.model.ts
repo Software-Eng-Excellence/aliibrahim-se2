@@ -15,6 +15,11 @@ export class Toy implements Item {
     material: string;
     batteryRequired: boolean;
     educational: boolean;
+<<<<<<< HEAD
+=======
+    price: number;
+    quantity: number;
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
   }) {
     this.toyType = data.toyType;
     this.ageGroup = data.ageGroup;
@@ -22,6 +27,11 @@ export class Toy implements Item {
     this.material = data.material;
     this.batteryRequired = data.batteryRequired;
     this.educational = data.educational;
+<<<<<<< HEAD
+=======
+    this.price = data.price;
+    this.quantity = data.quantity;
+>>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
   }
 
   public getType(): string {
