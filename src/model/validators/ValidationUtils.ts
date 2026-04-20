@@ -26,6 +26,7 @@ export class ValidationUtils {
       throw new Error(`Field must be a non-negative number: ${fieldName}`);
     }
   }
+<<<<<<< HEAD
   // use it for boolean fields
   static requireBoolean(value: unknown, fieldName: string): void {
     this.requireDefined(value, fieldName);
@@ -33,4 +34,6 @@ export class ValidationUtils {
       throw new Error(`Field must be a boolean: ${fieldName}`);
     }
   }
+=======
+>>>>>>> fa3c358 (Adjusted the cake builder to maintain SRP and added the unit test for)
 }
