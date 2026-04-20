@@ -26,11 +26,4 @@ export class ValidationUtils {
       throw new Error(`Field must be a non-negative number: ${fieldName}`);
     }
   }
-  // use it for boolean fields
-  static requireBoolean(value: unknown, fieldName: string): void {
-    this.requireDefined(value, fieldName);
-    if (typeof value !== 'boolean') {
-      throw new Error(`Field must be a boolean: ${fieldName}`);
-    }
-  }
 }
