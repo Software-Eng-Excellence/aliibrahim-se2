@@ -1,5 +1,5 @@
-import logger from '../../util/logger';
 import { Cake } from '../Cake.model';
+import { CakeValidator } from '../validators/Cake.validator';
 
 export class CakeBuilder {
   private type!: string;
@@ -88,29 +88,7 @@ export class CakeBuilder {
   }
 
   build(): Cake {
-    const requiredProps = [
-      this.type,
-      this.flavor,
-      this.filling,
-      this.size,
-      this.layers,
-      this.frostingType,
-      this.frostingFlavor,
-      this.decorationType,
-      this.decorationColor,
-      this.customMessage,
-      this.shape,
-      this.allergies,
-      this.specialIngredients,
-      this.packagingType,
-    ];
-    for (const prop of requiredProps) {
-      if (!prop) {
-        logger.error('Missing required field for Cake: ' + prop);
-        throw new Error('Missing required field for Cake: ' + prop);
-      }
-    }
-    return new Cake({
+    const fields = {
       type: this.type,
       flavor: this.flavor,
       filling: this.filling,
@@ -125,6 +103,8 @@ export class CakeBuilder {
       allergies: this.allergies,
       specialIngredients: this.specialIngredients,
       packagingType: this.packagingType,
-    });
+    };
+    CakeValidator.validate(fields);
+    return new Cake(fields);
   }
 }
