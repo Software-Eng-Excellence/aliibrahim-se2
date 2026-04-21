@@ -13,7 +13,14 @@ export class ToyBuilder {
 =======
   private price!: number;
   private quantity!: number;
+<<<<<<< HEAD
 >>>>>>> ca5850c (Added the toy builder along with its validation and unit tests.)
+=======
+
+  public static newBuilder(): ToyBuilder {
+    return new ToyBuilder();
+  }
+>>>>>>> 0882664 (set up the CSV mapper)
   setToyType(toyType: string): ToyBuilder {
     this.toyType = toyType;
     return this;

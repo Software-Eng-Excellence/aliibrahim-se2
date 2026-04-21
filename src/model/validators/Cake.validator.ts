@@ -19,7 +19,6 @@ export class CakeValidator {
       cake.decorationColor,
       'decorationColor',
     );
-    ValidationUtils.requireNonEmptyString(cake.customMessage, 'customMessage');
     ValidationUtils.requireNonEmptyString(cake.shape, 'shape');
     ValidationUtils.requireNonEmptyString(cake.allergies, 'allergies');
     ValidationUtils.requireNonEmptyString(

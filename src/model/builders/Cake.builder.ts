@@ -17,6 +17,9 @@ export class CakeBuilder {
   private specialIngredients!: string;
   private packagingType!: string;
 
+  public static newBuilder(): CakeBuilder {
+    return new CakeBuilder();
+  }
   setType(type: string): CakeBuilder {
     this.type = type;
     return this;
@@ -103,11 +106,6 @@ export class CakeBuilder {
       allergies: this.allergies,
       specialIngredients: this.specialIngredients,
       packagingType: this.packagingType,
-<<<<<<< HEAD
-=======
-      price: this.price,
-      quantity: this.quantity,
->>>>>>> fa3c358 (Adjusted the cake builder to maintain SRP and added the unit test for)
     };
     CakeValidator.validate(fields);
     return new Cake(fields);
