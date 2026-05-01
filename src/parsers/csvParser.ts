@@ -22,7 +22,10 @@ export async function readCSVFile(
           skip_empty_lines: true,
         },
         (err, records: string[][]) => {
-          if (err) reject(err);
+          if (!records || records.length === 0) {
+            return reject(new Error('CSV file contains no data rows'));
+          }
+          if (err) return reject(err);
           if (!includeHeaders) {
             records.shift(); // Remove the header row if not included
           }
@@ -48,7 +51,7 @@ export async function writeCSVFile(
   try {
     const csvContent = await new Promise<string>((resolve, reject) => {
       csvStringify(data, (err, output) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         resolve(output);
       });
     });

@@ -37,7 +37,9 @@ Test,42`;
     it('should handle empty CSV file', async () => {
       await fs.writeFile('./tests/test.csv', '', 'utf-8');
 
-      expect(await readCSVFile('./tests/test.csv')).toEqual([]);
+      await expect(readCSVFile('./tests/test.csv')).rejects.toThrow(
+        'CSV file contains no data rows',
+      );
     });
 
     it('should handle CSV with multiple rows', async () => {
