@@ -28,6 +28,9 @@ export async function readCSVFile(
           if (err) return reject(err);
           if (!includeHeaders) {
             records.shift(); // Remove the header row if not included
+            if (records.length === 0) {
+              return reject(new Error('CSV file contains no data rows'));
+            }
           }
           resolve(records);
         },
