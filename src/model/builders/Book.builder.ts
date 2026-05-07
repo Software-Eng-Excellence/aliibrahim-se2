@@ -9,8 +9,7 @@ export class BookBuilder {
   private publisher!: string;
   private specialEdition!: string;
   private packaging!: string;
-  private price!: number;
-  private quantity!: number;
+
   setTitle(title: string): BookBuilder {
     this.title = title;
     return this;
@@ -43,14 +42,7 @@ export class BookBuilder {
     this.packaging = packaging;
     return this;
   }
-  setPrice(price: number): BookBuilder {
-    this.price = price;
-    return this;
-  }
-  setQuantity(quantity: number): BookBuilder {
-    this.quantity = quantity;
-    return this;
-  }
+
   build(): Book {
     const fields = {
       title: this.title,
@@ -61,8 +53,6 @@ export class BookBuilder {
       publisher: this.publisher,
       specialEdition: this.specialEdition,
       packaging: this.packaging,
-      price: this.price,
-      quantity: this.quantity,
     };
     BookValidator.validate(fields);
     return new Book(fields);
