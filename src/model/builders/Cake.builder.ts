@@ -16,8 +16,6 @@ export class CakeBuilder {
   private allergies!: string;
   private specialIngredients!: string;
   private packagingType!: string;
-  private price!: number;
-  private quantity!: number;
 
   setType(type: string): CakeBuilder {
     this.type = type;
@@ -89,15 +87,6 @@ export class CakeBuilder {
     return this;
   }
 
-  setPrice(price: number): CakeBuilder {
-    this.price = price;
-    return this;
-  }
-
-  setQuantity(quantity: number): CakeBuilder {
-    this.quantity = quantity;
-    return this;
-  }
   build(): Cake {
     const requiredProps = [
       this.type,
@@ -114,8 +103,6 @@ export class CakeBuilder {
       this.allergies,
       this.specialIngredients,
       this.packagingType,
-      this.price,
-      this.quantity,
     ];
     for (const prop of requiredProps) {
       if (!prop) {
@@ -138,8 +125,6 @@ export class CakeBuilder {
       allergies: this.allergies,
       specialIngredients: this.specialIngredients,
       packagingType: this.packagingType,
-      price: this.price,
-      quantity: this.quantity,
     });
   }
 }

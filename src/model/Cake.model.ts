@@ -31,8 +31,6 @@ export class Cake implements Item {
     allergies: string;
     specialIngredients: string;
     packagingType: string;
-    price: number;
-    quantity: number;
   }) {
     this.type = data.type;
     this.flavor = data.flavor;
