@@ -45,8 +45,6 @@ describe('Cake parsing + mapper integration', () => {
         'allergies',
         'specialIngredients',
         'packagingType',
-        'price',
-        'quantity',
       ],
       [
         '1',
@@ -64,8 +62,6 @@ describe('Cake parsing + mapper integration', () => {
         'Nuts',
         'Strawberries',
         'Box',
-        '25.5',
-        '1',
       ],
     ];
 
@@ -75,8 +71,6 @@ describe('Cake parsing + mapper integration', () => {
     const cake = new CSVCakeMapper().map(parsed[0]);
 
     expect(cake.getType()).toBe('Birthday');
-    expect(cake.getQuantity()).toBe(1);
-    expect(cake.getPrice()).toBe(25.5);
     expect(cake.getFrostingFlavor()).toBe('Vanilla');
     expect(cake.getSpecialIngredients()).toBe('Strawberries');
     expect(cake.getShape()).toBe('Round');
@@ -111,8 +105,6 @@ describe('Cake parsing + mapper integration', () => {
       allergies: 'Nuts',
       specialIngredients: 'Strawberries',
       packagingType: 'Box',
-      price: 25.5,
-      quantity: 1,
     });
 
     const parsed = await readJSONFile(filePath);
@@ -140,8 +132,6 @@ describe('Cake parsing + mapper integration', () => {
         allergies: 'Nuts',
         specialIngredients: 'Strawberries',
         packagingType: 'Box',
-        price: 25.5,
-        quantity: 1,
       },
     });
 

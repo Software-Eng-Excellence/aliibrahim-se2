@@ -7,16 +7,7 @@ import {
 
 describe('ToyMapper happy path', () => {
   it('maps CSV toy data correctly', () => {
-    const row = [
-      'Action Figure',
-      '6+',
-      'Hasbro',
-      'Plastic',
-      'true',
-      'false',
-      '29.99',
-      '10',
-    ];
+    const row = ['Action Figure', '6+', 'Hasbro', 'Plastic', 'true', 'false'];
 
     const toy = new CSVToyMapper().map(row);
 
@@ -26,8 +17,6 @@ describe('ToyMapper happy path', () => {
     expect(toy.getMaterial()).toBe('Plastic');
     expect(toy.isBatteryRequired()).toBe(true);
     expect(toy.isEducational()).toBe(false);
-    expect(toy.getPrice()).toBe(29.99);
-    expect(toy.getQuantity()).toBe(10);
   });
 
   it('maps JSON toy data correctly', () => {
@@ -50,8 +39,6 @@ describe('ToyMapper happy path', () => {
     expect(toy.getMaterial()).toBe('Plastic');
     expect(toy.isBatteryRequired()).toBe(true);
     expect(toy.isEducational()).toBe(false);
-    expect(toy.getPrice()).toBe(29.99);
-    expect(toy.getQuantity()).toBe(10);
   });
 
   it('maps XML toy data correctly', () => {
@@ -62,8 +49,6 @@ describe('ToyMapper happy path', () => {
       material: 'Plastic',
       batteryRequired: 'true',
       educational: 'false',
-      price: 29.99,
-      quantity: 10,
     };
     console.log('XML Toy Data:', data);
     const toy = new XMLToyMapper().map(data);
@@ -74,7 +59,5 @@ describe('ToyMapper happy path', () => {
     expect(toy.getMaterial()).toBe('Plastic');
     expect(toy.isBatteryRequired()).toBe(true);
     expect(toy.isEducational()).toBe(false);
-    expect(toy.getPrice()).toBe(29.99);
-    expect(toy.getQuantity()).toBe(10);
   });
 });

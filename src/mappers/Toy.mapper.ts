@@ -11,8 +11,6 @@ export class CSVToyMapper implements IMapper<string[], Toy> {
       material: data[3],
       batteryRequired: data[4] === 'true',
       educational: data[5] === 'true',
-      price: parseFloat(data[6]),
-      quantity: parseInt(data[7]),
     });
   }
 }
@@ -27,8 +25,6 @@ export class XMLToyMapper implements IMapper<any, Toy> {
       ...data,
       batteryRequired: data.batteryRequired === 'true',
       educational: data.educational === 'true',
-      price: parseFloat(data.price),
-      quantity: parseInt(data.quantity),
     });
   }
 }
@@ -40,7 +36,5 @@ function buildToy(data: any): Toy {
     .setMaterial(data.material)
     .setBatteryRequired(data.batteryRequired)
     .setEducational(data.educational)
-    .setPrice(data.price)
-    .setQuantity(data.quantity)
     .build();
 }

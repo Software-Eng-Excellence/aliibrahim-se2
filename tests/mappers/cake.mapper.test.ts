@@ -72,8 +72,6 @@ describe('Mapper validation errors (bad data)', () => {
       'Nuts',
       'Strawberries',
       'Box',
-      '25.5',
-      '1',
     ];
 
     expect(() => new CSVCakeMapper().map(row)).toThrow();
