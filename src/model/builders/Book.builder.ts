@@ -9,16 +9,6 @@ export class BookBuilder {
   private publisher!: string;
   private specialEdition!: string;
   private packaging!: string;
-<<<<<<< HEAD
-
-=======
-  private price!: number;
-  private quantity!: number;
-
-  public static newBuilder(): BookBuilder {
-    return new BookBuilder();
-  }
->>>>>>> 0882664 (set up the CSV mapper)
   setTitle(title: string): BookBuilder {
     this.title = title;
     return this;

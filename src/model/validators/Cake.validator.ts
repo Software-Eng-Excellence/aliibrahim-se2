@@ -26,7 +26,5 @@ export class CakeValidator {
       'specialIngredients',
     );
     ValidationUtils.requireNonEmptyString(cake.packagingType, 'packagingType');
-    ValidationUtils.requireNonNegativeNumber(cake.price, 'price');
-    ValidationUtils.requirePositiveNumber(cake.quantity, 'quantity');
   }
 }

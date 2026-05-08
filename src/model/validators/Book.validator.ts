@@ -12,7 +12,5 @@ export class BookValidator {
       'specialEdition',
     );
     ValidationUtils.requireNonEmptyString(book.packaging, 'packaging');
-    ValidationUtils.requireNonNegativeNumber(book.price, 'price');
-    ValidationUtils.requirePositiveNumber(book.quantity, 'quantity');
   }
 }

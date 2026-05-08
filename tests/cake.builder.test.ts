@@ -16,14 +16,11 @@ describe('Cake Builder', () => {
       .setShape('Round')
       .setSpecialIngredients('None')
       .setPackagingType('Box')
-      .setPrice(0)
-      .setQuantity(1)
       .build();
 
     expect(cake).toBeDefined();
     expect(cake.getType()).toBe('Birthday');
     expect(cake.getFlavor()).toBe('Chocolate');
-    expect(cake.getPrice()).toBe(0);
     expect(cake.getCategory()).toBe(0); // ItemCategory.CAKE
     expect(cake.getAllergies()).toBe('None');
     expect(cake.getFilling()).toBe('Vanilla');
@@ -37,7 +34,6 @@ describe('Cake Builder', () => {
     expect(cake.getShape()).toBe('Round');
     expect(cake.getSpecialIngredients()).toBe('None');
     expect(cake.getPackagingType()).toBe('Box');
-    expect(cake.getQuantity()).toBe(1);
   });
   it('should throw if type is missing', () => {
     const builder = new CakeBuilder();
@@ -57,8 +53,6 @@ describe('Cake Builder', () => {
         .setShape('Round')
         .setSpecialIngredients('None')
         .setPackagingType('Box')
-        .setPrice(45.99)
-        .setQuantity(1)
         .build(),
     ).toThrow('Missing required field: type');
   });
@@ -81,8 +75,6 @@ describe('Cake Builder', () => {
         .setShape('Round')
         .setSpecialIngredients('None')
         .setPackagingType('Box')
-        .setPrice(45.99)
-        .setQuantity(1)
         .build(),
     ).toThrow('Field must be a non-empty string: type');
   });
@@ -105,33 +97,7 @@ describe('Cake Builder', () => {
         .setShape('Round')
         .setSpecialIngredients('None')
         .setPackagingType('Box')
-        .setPrice(45.99)
-        .setQuantity(1)
         .build(),
     ).toThrow();
-  });
-  it('should fail when price is negative', () => {
-    const builder = new CakeBuilder();
-
-    expect(() =>
-      builder
-        .setType('Birthday')
-        .setFlavor('Chocolate')
-        .setAllergies('None')
-        .setFilling('Vanilla')
-        .setSize(8)
-        .setLayers(3)
-        .setFrostingType('Buttercream')
-        .setFrostingFlavor('Vanilla')
-        .setDecorationType('Sprinkles')
-        .setDecorationColor('Red')
-        .setCustomMessage('Happy Birthday')
-        .setShape('Round')
-        .setSpecialIngredients('None')
-        .setPackagingType('Box')
-        .setPrice(-10) // ← negative price
-        .setQuantity(1)
-        .build(),
-    ).toThrow('Field must be a non-negative number: price');
   });
 });
