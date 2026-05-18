@@ -1,6 +1,6 @@
-import { Item, ItemCategory } from './Item.model';
+import { IItem, ItemCategory } from './Item.model';
 
-export class Cake implements Item {
+export class Cake implements IItem {
   private type: string;
   private flavor: string;
   private filling: string;
