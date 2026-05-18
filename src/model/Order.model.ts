@@ -1,7 +1,7 @@
-import { item } from './Item.model';
+import { Item } from './Item.model';
 
 export interface Order {
-  getItem(): item;
+  getItem(): Item;
   getPrice(): number;
   getQuantity(): number;
   getId(): string;
