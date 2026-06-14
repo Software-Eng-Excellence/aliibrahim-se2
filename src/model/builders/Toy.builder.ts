@@ -8,6 +8,9 @@ export class ToyBuilder {
   private material!: string;
   private batteryRequired!: boolean;
   private educational!: boolean;
+  public static newBuilder(): ToyBuilder {
+    return new ToyBuilder();
+  }
   setToyType(toyType: string): ToyBuilder {
     this.toyType = toyType;
     return this;

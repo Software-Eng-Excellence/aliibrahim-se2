@@ -21,3 +21,37 @@ export class CSVCakeMapper implements IMapper<string[], Cake> {
       .build();
   }
 }
+
+export class JSONCakeMapper implements IMapper<any, Cake> {
+  map(data: any): Cake {
+    return buildCake(data);
+  }
+}
+
+export class XMLCakeMapper implements IMapper<any, Cake> {
+  map(data: any): Cake {
+    return buildCake({
+      ...data,
+      size: parseInt(data.size),
+      layers: parseInt(data.layers),
+    });
+  }
+}
+function buildCake(data: any): Cake {
+  return CakeBuilder.newBuilder()
+    .setType(data.type)
+    .setFlavor(data.flavor)
+    .setFilling(data.filling)
+    .setSize(data.size)
+    .setLayers(data.layers)
+    .setFrostingType(data.frostingType)
+    .setFrostingFlavor(data.frostingFlavor)
+    .setDecorationType(data.decorationType)
+    .setDecorationColor(data.decorationColor)
+    .setCustomMessage(data.customMessage)
+    .setShape(data.shape)
+    .setAllergies(data.allergies)
+    .setSpecialIngredients(data.specialIngredients)
+    .setPackagingType(data.packagingType)
+    .build();
+}
