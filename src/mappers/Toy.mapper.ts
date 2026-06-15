@@ -13,10 +13,16 @@ export class CSVToyMapper implements IMapper<string[], Toy> {
       educational: data[5] === 'true',
     });
   }
+  reverse(data: Toy): string[] {
+    return reverseToy(data);
+  }
 }
 export class JSONToyMapper implements IMapper<any, Toy> {
   map(data: any): Toy {
     return buildToy(data);
+  }
+  reverse(data: Toy): any {
+    return reverseToy(data);
   }
 }
 export class XMLToyMapper implements IMapper<any, Toy> {
@@ -26,6 +32,9 @@ export class XMLToyMapper implements IMapper<any, Toy> {
       batteryRequired: data.batteryRequired === 'true',
       educational: data.educational === 'true',
     });
+  }
+  reverse(data: Toy): any {
+    return reverseToy(data);
   }
 }
 function buildToy(data: any): Toy {
@@ -37,4 +46,14 @@ function buildToy(data: any): Toy {
     .setBatteryRequired(data.batteryRequired)
     .setEducational(data.educational)
     .build();
+}
+function reverseToy(data: Toy): any {
+  return {
+    toyType: data.getType(),
+    ageGroup: data.getAgeGroup(),
+    brand: data.getBrand(),
+    material: data.getMaterial(),
+    batteryRequired: data.isBatteryRequired(),
+    educational: data.isEducational(),
+  };
 }

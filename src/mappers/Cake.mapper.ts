@@ -20,11 +20,17 @@ export class CSVCakeMapper implements IMapper<string[], Cake> {
       .setPackagingType(data[14])
       .build();
   }
+  reverse(data: Cake): string[] {
+    return reverseCake(data);
+  }
 }
 
 export class JSONCakeMapper implements IMapper<any, Cake> {
   map(data: any): Cake {
     return buildCake(data);
+  }
+  reverse(data: Cake): any {
+    return reverseCake(data);
   }
 }
 
@@ -35,6 +41,9 @@ export class XMLCakeMapper implements IMapper<any, Cake> {
       size: parseInt(data.size),
       layers: parseInt(data.layers),
     });
+  }
+  reverse(data: Cake): any {
+    return reverseCake(data);
   }
 }
 function buildCake(data: any): Cake {
@@ -54,4 +63,22 @@ function buildCake(data: any): Cake {
     .setSpecialIngredients(data.specialIngredients)
     .setPackagingType(data.packagingType)
     .build();
+}
+function reverseCake(cake: Cake): any {
+  return {
+    type: cake.getType(),
+    flavor: cake.getFlavor(),
+    filling: cake.getFilling(),
+    size: cake.getSize(),
+    layers: cake.getLayers(),
+    frostingType: cake.getFrostingType(),
+    frostingFlavor: cake.getFrostingFlavor(),
+    decorationType: cake.getDecorationType(),
+    decorationColor: cake.getDecorationColor(),
+    customMessage: cake.getCustomMessage(),
+    shape: cake.getShape(),
+    allergies: cake.getAllergies(),
+    specialIngredients: cake.getSpecialIngredients(),
+    packagingType: cake.getPackagingType(),
+  };
 }

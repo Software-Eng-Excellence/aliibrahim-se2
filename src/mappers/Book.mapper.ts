@@ -14,10 +14,16 @@ export class CSVBookMapper implements IMapper<string[], Book> {
       packaging: data[7],
     });
   }
+  reverse(data: Book): string[] {
+    return reverseBook(data);
+  }
 }
 export class JSONBookMapper implements IMapper<any, Book> {
   map(data: any): Book {
     return buildBook(data);
+  }
+  reverse(data: Book): any {
+    return reverseBook(data);
   }
 }
 export class XMLBookMapper implements IMapper<any, Book> {
@@ -25,6 +31,9 @@ export class XMLBookMapper implements IMapper<any, Book> {
     return buildBook({
       ...data,
     });
+  }
+  reverse(data: Book): any {
+    return reverseBook(data);
   }
 }
 function buildBook(data: any): Book {
@@ -38,4 +47,16 @@ function buildBook(data: any): Book {
     .setSpecialEdition(data.specialEdition)
     .setPackaging(data.packaging)
     .build();
+}
+function reverseBook(data: Book): any {
+  return {
+    title: data.getTitle(),
+    author: data.getAuthor(),
+    genre: data.getGenre(),
+    format: data.getFormat(),
+    language: data.getLanguage(),
+    publisher: data.getPublisher(),
+    specialEdition: data.getSpecialEdition(),
+    packaging: data.getPackaging(),
+  };
 }
