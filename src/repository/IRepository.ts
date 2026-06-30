@@ -3,6 +3,7 @@ export type id = string;
 export interface ID {
   getId(): id;
 }
+
 export interface IRepository<T extends ID> {
   /**
    * Creates a new item in the repository and returns the created item's identifier.
@@ -10,7 +11,7 @@ export interface IRepository<T extends ID> {
    * @param item - The item to create. Must conform to the repository's item type T.
    * @returns A promise that resolves to an ID object for the created item.
    * @throws {InvalidItemException} When the provided item is invalid (validation failed).
-   * @throws {RepositoryException} When an unexpected repository error occurs (e.g. DB failure).
+   * @throws {DbException} When an unexcpected database error occurs during creation.
    */
   create(item: T): Promise<id>;
 
@@ -20,7 +21,7 @@ export interface IRepository<T extends ID> {
    * @param id - The identifier object of the item to retrieve. Typically contains an `id` string.
    * @returns A promise that resolves to the requested item of type T.
    * @throws {ItemNotFoundException} When no item with the given id exists in the repository.
-   * @throws {RepositoryException} When an unexpected repository error occurs.
+   * @throws {DbException} When an unexpected database error occurs.
    */
   get(id: id): Promise<T>;
 
@@ -28,7 +29,7 @@ export interface IRepository<T extends ID> {
    * Retrieves all items from the repository.
    *
    * @returns A promise that resolves to an array of items of type T. Returns an empty array if none exist.
-   * @throws {RepositoryException} When an unexpected repository error occurs.
+   * @throws {DbException} When an unexpected database error occurs.
    */
   getAll(): Promise<T[]>;
 
@@ -39,7 +40,7 @@ export interface IRepository<T extends ID> {
    * @returns A promise that resolves when the update is complete.
    * @throws {InvalidItemException} When the provided item is invalid for update.
    * @throws {ItemNotFoundException} When no item with the given id exists to update.
-   * @throws {RepositoryException} When an unexpected repository error occurs.
+   * @throws {DbException} When an unexpected database error occurs.
    */
   update(item: T): Promise<void>;
 
@@ -49,7 +50,22 @@ export interface IRepository<T extends ID> {
    * @param id - The identifier object of the item to delete.
    * @returns A promise that resolves when the deletion is complete.
    * @throws {ItemNotFoundException} When no item with the given id exists to delete.
-   * @throws {RepositoryException} When an unexpected repository error occurs.
+   * @throws {DbException} When an unexpected database error occurs.
    */
   delete(id: id): Promise<void>;
 }
+
+export interface Initializable {
+  /**
+   * Initializes the repository storage layer.
+   *
+   * Typical responsibilities include establishing the database connection
+   * and creating required tables/collections if they do not already exist.
+   *
+   * @returns A promise that resolves when initialization is complete.
+   * @throws {InitializationException} When connection setup or table creation fails.
+   */
+  init(): Promise<void>;
+}
+export interface InitializableRepository<T extends ID>
+  extends IRepository<T>, Initializable {}
