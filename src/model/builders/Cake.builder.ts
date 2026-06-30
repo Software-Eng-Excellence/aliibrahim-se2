@@ -1,4 +1,5 @@
-import { Cake } from '../Cake.model';
+import logger from '../../util/logger';
+import { Cake, IdentifiableCake } from '../Cake.model';
 import { CakeValidator } from '../validators/Cake.validator';
 
 export class CakeBuilder {
@@ -109,5 +110,44 @@ export class CakeBuilder {
     };
     CakeValidator.validate(fields);
     return new Cake(fields);
+  }
+}
+
+export class IdentifiableCakeBuilder extends CakeBuilder {
+  private id!: string;
+  private cake!: Cake;
+  static newBuilder(): IdentifiableCakeBuilder {
+    return new IdentifiableCakeBuilder();
+  }
+
+  setId(id: string): IdentifiableCakeBuilder {
+    this.id = id;
+    return this;
+  }
+  setCake(cake: Cake): IdentifiableCakeBuilder {
+    this.cake = cake;
+    return this;
+  }
+  build(): IdentifiableCake {
+    if (!this.cake) {
+      logger.error('Cake must be set before building IdentifiableCake');
+      throw new Error('Cake must be set before building IdentifiableCake');
+    }
+    return new IdentifiableCake(this.id, {
+      type: this.cake.getType(),
+      flavor: this.cake.getFlavor(),
+      filling: this.cake.getFilling(),
+      size: this.cake.getSize(),
+      layers: this.cake.getLayers(),
+      frostingType: this.cake.getFrostingType(),
+      frostingFlavor: this.cake.getFrostingFlavor(),
+      decorationType: this.cake.getDecorationType(),
+      decorationColor: this.cake.getDecorationColor(),
+      customMessage: this.cake.getCustomMessage(),
+      shape: this.cake.getShape(),
+      allergies: this.cake.getAllergies(),
+      specialIngredients: this.cake.getSpecialIngredients(),
+      packagingType: this.cake.getPackagingType(),
+    });
   }
 }

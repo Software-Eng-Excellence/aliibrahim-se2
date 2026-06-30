@@ -1,6 +1,7 @@
 import { OrderValidator } from '../validators/Order.validator';
-import { IItem } from '../Item.model';
-import { Order } from '../Order.model';
+import { IIdentifiableItem, IItem } from '../IItem';
+import { IdentifiableOrderItem, Order } from '../Order.model';
+import logger from '../../util/logger';
 export class OrderBuilder {
   private id!: string;
   private item!: IItem;
@@ -34,5 +35,42 @@ export class OrderBuilder {
     };
     OrderValidator.validate(fields);
     return new Order(fields);
+  }
+}
+
+export class IdentifiableOrderItemBuilder {
+  private order!: Order;
+  private item!: IIdentifiableItem;
+
+  static newBuilder(): IdentifiableOrderItemBuilder {
+    return new IdentifiableOrderItemBuilder();
+  }
+
+  setItem(item: IIdentifiableItem): IdentifiableOrderItemBuilder {
+    this.item = item;
+    return this;
+  }
+  setOrder(order: Order): IdentifiableOrderItemBuilder {
+    this.order = order;
+    return this;
+  }
+
+  build(): IdentifiableOrderItem {
+    if (!this.order || !this.item) {
+      logger.error(
+        'Order and Item must be set before building IdentifiableOrderItem',
+      );
+      throw new Error(
+        'Order and Item must be set before building IdentifiableOrderItem',
+      );
+    }
+    const fields = {
+      id: this.order.getId(),
+      item: this.item,
+      price: this.order.getPrice(),
+      quantity: this.order.getQuantity(),
+    };
+    OrderValidator.validate(fields);
+    return new IdentifiableOrderItem(fields);
   }
 }

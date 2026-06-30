@@ -1,5 +1,5 @@
-import { IItem } from './Item.model';
-import { IOrder } from './IOrder';
+import { IIdentifiableItem, IItem } from './IItem';
+import { IIdentifiableOrderItem, IOrder } from './IOrder';
 export class Order implements IOrder {
   private id: string;
   private item: IItem;
@@ -32,5 +32,28 @@ export class Order implements IOrder {
 
   getId(): string {
     return this.id;
+  }
+}
+
+export class IdentifiableOrderItem implements IIdentifiableOrderItem {
+  constructor(
+    private fields: {
+      id: string;
+      item: IIdentifiableItem;
+      price: number;
+      quantity: number;
+    },
+  ) {}
+  getPrice(): number {
+    return this.fields.price;
+  }
+  getQuantity(): number {
+    return this.fields.quantity;
+  }
+  getId(): string {
+    return this.fields.id;
+  }
+  getItem(): IIdentifiableItem {
+    return this.fields.item;
   }
 }

@@ -1,4 +1,5 @@
-import { IItem, ItemCategory } from './Item.model';
+import { id } from '../repository/IRepository';
+import { IIdentifiableItem, IItem, ItemCategory } from './IItem';
 
 export class Cake implements IItem {
   private type: string;
@@ -104,5 +105,32 @@ export class Cake implements IItem {
 
   getPackagingType(): string {
     return this.packagingType;
+  }
+}
+export class IdentifiableCake extends Cake implements IIdentifiableItem {
+  constructor(
+    private id: id,
+    data: {
+      type: string;
+      flavor: string;
+      filling: string;
+      size: number;
+      layers: number;
+      frostingType: string;
+      frostingFlavor: string;
+      decorationType: string;
+      decorationColor: string;
+      customMessage: string;
+      shape: string;
+      allergies: string;
+      specialIngredients: string;
+      packagingType: string;
+    },
+  ) {
+    super(data);
+  }
+
+  getId(): id {
+    return this.id;
   }
 }
