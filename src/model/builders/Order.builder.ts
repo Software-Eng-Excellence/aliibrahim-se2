@@ -7,8 +7,8 @@ export class OrderBuilder {
   private item!: IItem;
   private price!: number;
   private quantity!: number;
-  setId(id: string): OrderBuilder {
-    this.id = id;
+  private setId(id: string): OrderBuilder {
+    this.id = this.generateRandomAlphanumericId();
     return this;
   }
   setItem(item: IItem): OrderBuilder {
@@ -35,6 +35,10 @@ export class OrderBuilder {
     };
     OrderValidator.validate(fields);
     return new Order(fields);
+  }
+  private generateRandomAlphanumericId(): string {
+    // Returns something like: "7X2A9B84" or "K8N3M2QX"
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 }
 

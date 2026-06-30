@@ -120,8 +120,8 @@ export class IdentifiableCakeBuilder extends CakeBuilder {
     return new IdentifiableCakeBuilder();
   }
 
-  setId(id: string): IdentifiableCakeBuilder {
-    this.id = id;
+  private setId(id: string): IdentifiableCakeBuilder {
+    this.id = this.generateRandomAlphanumericId();
     return this;
   }
   setCake(cake: Cake): IdentifiableCakeBuilder {
@@ -149,5 +149,9 @@ export class IdentifiableCakeBuilder extends CakeBuilder {
       specialIngredients: this.cake.getSpecialIngredients(),
       packagingType: this.cake.getPackagingType(),
     });
+  }
+  private generateRandomAlphanumericId(): string {
+    // Returns something like: "7X2A9B84" or "K8N3M2QX"
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 }
