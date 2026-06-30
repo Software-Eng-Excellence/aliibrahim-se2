@@ -9,5 +9,6 @@ export default {
     csv: {
       cakes: 'src/data/cake orders.csv',
     },
+    sqlite: 'src/data/orders.db',
   },
 };
