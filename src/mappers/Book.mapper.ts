@@ -1,6 +1,9 @@
 import { IMapper } from './IMapper';
-import { Book } from '../model/Book.model';
-import { BookBuilder } from '../model/builders/Book.builder';
+import { Book, IdentifiableBook } from '../model/Book.model';
+import {
+  BookBuilder,
+  IdentifiableBookBuilder,
+} from '../model/builders/Book.builder';
 export class CSVBookMapper implements IMapper<string[], Book> {
   map(data: string[]): Book {
     return buildBook({
@@ -59,4 +62,50 @@ function reverseBook(data: Book): any {
     specialEdition: data.getSpecialEdition(),
     packaging: data.getPackaging(),
   };
+}
+export interface PostgresBook {
+  id: string;
+  title: string;
+  author: string;
+  genre: string;
+  format: string;
+  language: string;
+  publisher: string;
+  specialedition: string;
+  packaging: string;
+}
+export class PostgresBookMapper implements IMapper<
+  PostgresBook,
+  IdentifiableBook
+> {
+  map(data: PostgresBook): IdentifiableBook {
+    return IdentifiableBookBuilder.newBuilder()
+      .setBook(
+        BookBuilder.newBuilder()
+          .setTitle(data.title)
+          .setAuthor(data.author)
+          .setGenre(data.genre)
+          .setFormat(data.format)
+          .setLanguage(data.language)
+          .setPublisher(data.publisher)
+          .setSpecialEdition(data.specialedition)
+          .setPackaging(data.packaging)
+          .build(),
+      )
+      .setId(data.id)
+      .build();
+  }
+  reverse(data: IdentifiableBook): PostgresBook {
+    return {
+      id: data.getId(),
+      title: data.getTitle(),
+      author: data.getAuthor(),
+      genre: data.getGenre(),
+      format: data.getFormat(),
+      language: data.getLanguage(),
+      publisher: data.getPublisher(),
+      specialedition: data.getSpecialEdition(),
+      packaging: data.getPackaging(),
+    };
+  }
 }

@@ -1,4 +1,5 @@
-import { Book } from '../Book.model';
+import logger from '../../util/logger';
+import { Book, IdentifiableBook } from '../Book.model';
 import { BookValidator } from '../validators/Book.validator';
 export class BookBuilder {
   private title!: string;
@@ -59,5 +60,41 @@ export class BookBuilder {
     };
     BookValidator.validate(fields);
     return new Book(fields);
+  }
+}
+export class IdentifiableBookBuilder extends BookBuilder {
+  private id?: string;
+  private book!: Book;
+  static newBuilder(): IdentifiableBookBuilder {
+    return new IdentifiableBookBuilder();
+  }
+  public setId(id: string): IdentifiableBookBuilder {
+    this.id = id;
+    return this;
+  }
+  setBook(book: Book): IdentifiableBookBuilder {
+    this.book = book;
+    return this;
+  }
+  build(): IdentifiableBook {
+    if (!this.book) {
+      logger.error('Book must be set before building IdentifiableBook');
+      throw new Error('Book must be set before building IdentifiableBook');
+    }
+    const finalId = this.id || this.generateRandomAlphanumericId();
+    return new IdentifiableBook(finalId, {
+      title: this.book.getTitle(),
+      author: this.book.getAuthor(),
+      genre: this.book.getGenre(),
+      format: this.book.getFormat(),
+      language: this.book.getLanguage(),
+      publisher: this.book.getPublisher(),
+      specialEdition: this.book.getSpecialEdition(),
+      packaging: this.book.getPackaging(),
+    });
+  }
+  private generateRandomAlphanumericId(): string {
+    // Returns something like: "7X2A9B84" or "K8N3M2QX"
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 }
