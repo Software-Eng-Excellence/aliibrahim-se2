@@ -31,28 +31,28 @@ const INSERT_CAKE = `INSERT INTO ${tableName} (id, type, flavor, filling, size, 
 const SELECT_BY_ID = `
   SELECT 
     id, type, flavor, filling, size, layers,
-    frostingType AS "frostingType",
-    frostingFlavor AS "frostingFlavor",
-    decorationType AS "decorationType",
-    decorationColor AS "decorationColor",
-    customMessage AS "customMessage",
+    frostingType ,
+    frostingFlavor,
+    decorationType  ,
+    decorationColor  ,
+    customMessage ,
     shape, allergies,
-    specialIngredients AS "specialIngredients",
-    packagingType AS "packagingType"
+    specialIngredients,
+    packagingType 
   FROM ${tableName} 
   WHERE id = $1
 `;
 const SELECT_ALL = `
   SELECT 
     id, type, flavor, filling, size, layers,
-    frostingType AS "frostingType",
-    frostingFlavor AS "frostingFlavor",
-    decorationType AS "decorationType",
-    decorationColor AS "decorationColor",
-    customMessage AS "customMessage",
+    frostingType ,
+    frostingFlavor ,
+    decorationType ,
+    decorationColor ,
+    customMessage ,
     shape, allergies,
-    specialIngredients AS "specialIngredients",
-    packagingType AS "packagingType"
+    specialIngredients ,
+    packagingType 
   FROM ${tableName} 
 
 `;
