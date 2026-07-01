@@ -73,3 +73,46 @@ export class SQLiteOrderMapper implements IMapper<
     };
   }
 }
+export class PostgreSQLOrderMapper implements IMapper<
+  { row: PostgreSQLOrder; item: IIdentifiableItem },
+  IIdentifiableOrderItem
+> {
+  map(data: {
+    row: PostgreSQLOrder;
+    item: IIdentifiableItem;
+  }): IIdentifiableOrderItem {
+    const { row, item } = data;
+    const order = OrderBuilder.newBuilder()
+      .setId(row.id)
+      .setPrice(row.price)
+      .setQuantity(row.quantity)
+      .setItem(item)
+      .build();
+    return IdentifiableOrderItemBuilder.newBuilder()
+      .setOrder(order)
+      .setItem(item)
+      .build();
+  }
+  reverse(data: IIdentifiableOrderItem): {
+    row: PostgreSQLOrder;
+    item: IIdentifiableItem;
+  } {
+    return {
+      row: {
+        id: data.getId(),
+        price: data.getPrice(),
+        quantity: data.getQuantity(),
+        category: data.getItem().getCategory(),
+        item_id: data.getItem().getId(),
+      },
+      item: data.getItem(),
+    };
+  }
+}
+export interface PostgreSQLOrder {
+  id: string;
+  price: number;
+  category: string;
+  quantity: number;
+  item_id: string;
+}
