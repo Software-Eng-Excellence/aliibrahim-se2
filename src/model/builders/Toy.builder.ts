@@ -1,4 +1,5 @@
-import { Toy } from '../Toy.model';
+import logger from '../../util/logger';
+import { IdentifiableToy, Toy } from '../Toy.model';
 import { ToyValidator } from '../validators/Toy.validator';
 
 export class ToyBuilder {
@@ -46,5 +47,41 @@ export class ToyBuilder {
     };
     ToyValidator.validate(fields);
     return new Toy(fields);
+  }
+}
+export class IdentifiableToyBuilder extends ToyBuilder {
+  private id?: string;
+  private toy!: Toy;
+  static newBuilder(): IdentifiableToyBuilder {
+    return new IdentifiableToyBuilder();
+  }
+  public setId(id: string): IdentifiableToyBuilder {
+    this.id = id;
+    return this;
+  }
+  setToy(toy: Toy): IdentifiableToyBuilder {
+    this.toy = toy;
+    return this;
+  }
+  build(): IdentifiableToy {
+    if (!this.toy) {
+      logger.error('Toy must be set before building IdentifiableToy');
+      throw new Error('Toy must be set before building IdentifiableToy');
+    }
+    const finalId = this.id || this.generateRandomAlphanumericId();
+    return new IdentifiableToy(finalId, {
+      toyType: this.toy.getToyType(),
+      ageGroup: this.toy.getAgeGroup(),
+      brand: this.toy.getBrand(),
+      material: this.toy.getMaterial(),
+      batteryRequired: this.toy.isBatteryRequired(),
+      educational: this.toy.isEducational(),
+    });
+  }
+  private generateRandomAlphanumericId() {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
   }
 }

@@ -1,6 +1,9 @@
 import { IMapper } from './IMapper';
-import { Toy } from '../model/Toy.model';
-import { ToyBuilder } from '../model/builders/Toy.builder';
+import { IdentifiableToy, Toy } from '../model/Toy.model';
+import {
+  IdentifiableToyBuilder,
+  ToyBuilder,
+} from '../model/builders/Toy.builder';
 
 export class CSVToyMapper implements IMapper<string[], Toy> {
   map(data: string[]): Toy {
@@ -49,11 +52,51 @@ function buildToy(data: any): Toy {
 }
 function reverseToy(data: Toy): any {
   return {
-    toyType: data.getType(),
+    toyType: data.getToyType(),
     ageGroup: data.getAgeGroup(),
     brand: data.getBrand(),
     material: data.getMaterial(),
     batteryRequired: data.isBatteryRequired(),
     educational: data.isEducational(),
   };
+}
+export interface PostgresToy {
+  id: string;
+  toytype: string;
+  agegroup: string;
+  brand: string;
+  material: string;
+  batteryrequired: boolean;
+  educational: boolean;
+}
+export class PostgresToyMapper implements IMapper<
+  PostgresToy,
+  IdentifiableToy
+> {
+  map(data: PostgresToy): IdentifiableToy {
+    return IdentifiableToyBuilder.newBuilder()
+      .setToy(
+        new ToyBuilder()
+          .setToyType(data.toytype)
+          .setAgeGroup(data.agegroup)
+          .setBrand(data.brand)
+          .setMaterial(data.material)
+          .setBatteryRequired(data.batteryrequired)
+          .setEducational(data.educational)
+          .build(),
+      )
+      .setId(data.id)
+      .build();
+  }
+  reverse(data: IdentifiableToy): PostgresToy {
+    return {
+      id: data.getId(),
+      toytype: data.getToyType(),
+      agegroup: data.getAgeGroup(),
+      brand: data.getBrand(),
+      material: data.getMaterial(),
+      batteryrequired: data.isBatteryRequired(),
+      educational: data.isEducational(),
+    };
+  }
 }
