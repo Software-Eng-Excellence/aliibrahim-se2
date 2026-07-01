@@ -26,6 +26,7 @@ export class CakeOrderRepository extends OrderRepository {
   }
   protected async save(orders: IOrder[]): Promise<void> {
     const header: string[] = [
+      'id',
       'type',
       'flavor',
       'filling',
@@ -40,6 +41,8 @@ export class CakeOrderRepository extends OrderRepository {
       'allergies',
       'specialIngredients',
       'packagingType',
+      'price',
+      'quantity',
     ];
     // covert the list of objects into a 2d array using mapper
     const csv = orders.map((order) => this.mapper.reverse(order));

@@ -1,4 +1,3 @@
-import config from './config';
 import {
   CakeBuilder,
   IdentifiableCakeBuilder,
@@ -7,9 +6,8 @@ import {
   IdentifiableOrderItemBuilder,
   OrderBuilder,
 } from './model/builders/Order.builder';
-import { CakeOrderRepository } from './repository/file/Cake.order.repository';
-import { CakeRepository } from './repository/sqlite/Cake.order.repository';
-import { OrderRepository } from './repository/sqlite/Order.repository';
+import { ItemCategory } from './model/IItem';
+import { DBMode, RepositoryFactory } from './repository/Repository.factory';
 
 import logger from './util/logger';
 
@@ -20,8 +18,10 @@ async function main() {
   // logger.info('List of orders: \n %o', orders);
 }
 async function DBSandBox() {
-  const dbOrder = new OrderRepository(new CakeRepository());
-  await dbOrder.init();
+  const dbOrder = await RepositoryFactory.create(
+    DBMode.FILE,
+    ItemCategory.CAKE,
+  );
 
   const cake = CakeBuilder.newBuilder()
     .setType('Birthday')
@@ -39,12 +39,8 @@ async function DBSandBox() {
     .setSpecialIngredients('None')
     .setPackagingType('Box')
     .build();
-  const idCake = IdentifiableCakeBuilder.newBuilder()
-    .setCake(cake)
-    .setId('1')
-    .build();
+  const idCake = IdentifiableCakeBuilder.newBuilder().setCake(cake).build();
   const order = OrderBuilder.newBuilder()
-    .setId('1')
     .setItem(cake)
     .setPrice(100)
     .setQuantity(1)

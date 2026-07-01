@@ -24,7 +24,7 @@ export class CSVCakeMapper implements IMapper<string[], Cake> {
       .build();
   }
   reverse(data: Cake): string[] {
-    return reverseCake(data);
+    return reverseCakeCSV(data);
   }
 }
 
@@ -84,6 +84,25 @@ function reverseCake(cake: Cake): any {
     specialIngredients: cake.getSpecialIngredients(),
     packagingType: cake.getPackagingType(),
   };
+}
+
+function reverseCakeCSV(cake: Cake): string[] {
+  return [
+    cake.getType(),
+    cake.getFlavor(),
+    cake.getFilling(),
+    cake.getSize().toString(),
+    cake.getLayers().toString(),
+    cake.getFrostingType(),
+    cake.getFrostingFlavor(),
+    cake.getDecorationType(),
+    cake.getDecorationColor(),
+    cake.getCustomMessage(),
+    cake.getShape(),
+    cake.getAllergies(),
+    cake.getSpecialIngredients(),
+    cake.getPackagingType(),
+  ];
 }
 export interface SQLiteCake {
   id: string;

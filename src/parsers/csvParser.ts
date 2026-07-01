@@ -22,10 +22,10 @@ export async function readCSVFile(
           skip_empty_lines: true,
         },
         (err, records: string[][]) => {
+          if (err) return reject(err);
           if (!records || records.length === 0) {
             return reject(new Error('CSV file contains no data rows'));
           }
-          if (err) return reject(err);
           if (!includeHeaders) {
             records.shift(); // Remove the header row if not included
             if (records.length === 0) {
