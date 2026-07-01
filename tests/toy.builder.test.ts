@@ -1,4 +1,5 @@
 import { ToyBuilder } from '../src/model/builders/Toy.builder';
+import { ItemCategory } from '../src/model/IItem';
 
 describe('Toy Builder', () => {
   it('should build a toy with all properties set', () => {
@@ -12,8 +13,8 @@ describe('Toy Builder', () => {
       .build();
 
     expect(toy).toBeDefined();
-    expect(toy.getCategory()).toBe(2); // ItemCategory.TOY
-    expect(toy.getType()).toBe('Action Figure');
+    expect(toy.getCategory()).toBe(ItemCategory.TOY);
+    expect(toy.getToyType()).toBe('Action Figure');
     expect(toy.getAgeGroup()).toBe('8+');
     expect(toy.getBrand()).toBe('FunToys');
     expect(toy.getMaterial()).toBe('Plastic');

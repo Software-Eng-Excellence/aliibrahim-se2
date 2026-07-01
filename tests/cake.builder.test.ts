@@ -1,4 +1,5 @@
 import { CakeBuilder } from '../src/model/builders/Cake.builder';
+import { ItemCategory } from '../src/model/IItem';
 describe('Cake Builder', () => {
   it('should build a cake with all properties set with free price', () => {
     const cake = new CakeBuilder()
@@ -21,7 +22,7 @@ describe('Cake Builder', () => {
     expect(cake).toBeDefined();
     expect(cake.getType()).toBe('Birthday');
     expect(cake.getFlavor()).toBe('Chocolate');
-    expect(cake.getCategory()).toBe(0); // ItemCategory.CAKE
+    expect(cake.getCategory()).toBe(ItemCategory.CAKE);
     expect(cake.getAllergies()).toBe('None');
     expect(cake.getFilling()).toBe('Vanilla');
     expect(cake.getSize()).toBe(8);

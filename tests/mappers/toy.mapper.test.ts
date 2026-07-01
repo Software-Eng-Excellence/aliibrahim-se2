@@ -11,7 +11,7 @@ describe('ToyMapper happy path', () => {
 
     const toy = new CSVToyMapper().map(row);
 
-    expect(toy.getType()).toBe('Action Figure');
+    expect(toy.getToyType()).toBe('Action Figure');
     expect(toy.getAgeGroup()).toBe('6+');
     expect(toy.getBrand()).toBe('Hasbro');
     expect(toy.getMaterial()).toBe('Plastic');
@@ -33,7 +33,7 @@ describe('ToyMapper happy path', () => {
 
     const toy = new JSONToyMapper().map(data);
 
-    expect(toy.getType()).toBe('Action Figure');
+    expect(toy.getToyType()).toBe('Action Figure');
     expect(toy.getAgeGroup()).toBe('6+');
     expect(toy.getBrand()).toBe('Hasbro');
     expect(toy.getMaterial()).toBe('Plastic');
@@ -53,7 +53,7 @@ describe('ToyMapper happy path', () => {
     console.log('XML Toy Data:', data);
     const toy = new XMLToyMapper().map(data);
 
-    expect(toy.getType()).toBe('Action Figure');
+    expect(toy.getToyType()).toBe('Action Figure');
     expect(toy.getAgeGroup()).toBe('6+');
     expect(toy.getBrand()).toBe('Hasbro');
     expect(toy.getMaterial()).toBe('Plastic');

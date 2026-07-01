@@ -1,4 +1,5 @@
 import { BookBuilder } from '../src/model/builders/Book.builder';
+import { ItemCategory } from '../src/model/IItem';
 
 describe('Book Builder', () => {
   it('should build a book with all properties set with free price', () => {
@@ -11,12 +12,13 @@ describe('Book Builder', () => {
       .setPublisher('Acme Publishing')
       .setSpecialEdition('Collector')
       .setPackaging('Boxed')
+
       .build();
 
     expect(book).toBeDefined();
     expect(book.getTitle()).toBe('The Great Novel');
     expect(book.getAuthor()).toBe('Jane Doe');
-    expect(book.getCategory()).toBe(1); // ItemCategory.BOOK
+    expect(book.getCategory()).toBe(ItemCategory.BOOK);
     expect(book.getGenre()).toBe('Fiction');
     expect(book.getFormat()).toBe('Hardcover');
     expect(book.getLanguage()).toBe('English');
