@@ -147,3 +147,5 @@ export class SQLiteCakeMapper implements IMapper<SQLiteCake, IdentifiableCake> {
     };
   }
 }
+export type PostgresCake = SQLiteCake;
+export class PostgresCakeMapper extends SQLiteCakeMapper {}

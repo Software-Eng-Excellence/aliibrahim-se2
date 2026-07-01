@@ -114,14 +114,14 @@ export class CakeBuilder {
 }
 
 export class IdentifiableCakeBuilder extends CakeBuilder {
-  private id!: string;
+  private id?: string;
   private cake!: Cake;
   static newBuilder(): IdentifiableCakeBuilder {
     return new IdentifiableCakeBuilder();
   }
 
-  private setId(id: string): IdentifiableCakeBuilder {
-    this.id = this.generateRandomAlphanumericId();
+  public setId(id: string): IdentifiableCakeBuilder {
+    this.id = id;
     return this;
   }
   setCake(cake: Cake): IdentifiableCakeBuilder {
@@ -133,7 +133,8 @@ export class IdentifiableCakeBuilder extends CakeBuilder {
       logger.error('Cake must be set before building IdentifiableCake');
       throw new Error('Cake must be set before building IdentifiableCake');
     }
-    return new IdentifiableCake(this.id, {
+    const finalId = this.id || this.generateRandomAlphanumericId();
+    return new IdentifiableCake(finalId, {
       type: this.cake.getType(),
       flavor: this.cake.getFlavor(),
       filling: this.cake.getFilling(),
