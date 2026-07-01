@@ -3,12 +3,12 @@ import { IIdentifiableItem, IItem } from '../IItem';
 import { IdentifiableOrderItem, Order } from '../Order.model';
 import logger from '../../util/logger';
 export class OrderBuilder {
-  private id!: string;
+  private id?: string;
   private item!: IItem;
   private price!: number;
   private quantity!: number;
-  private setId(id: string): OrderBuilder {
-    this.id = this.generateRandomAlphanumericId();
+  public setId(id: string): OrderBuilder {
+    this.id = id;
     return this;
   }
   setItem(item: IItem): OrderBuilder {
@@ -27,8 +27,10 @@ export class OrderBuilder {
     return new OrderBuilder();
   }
   build(): Order {
+    const finalid = this.id || this.generateRandomAlphanumericId();
+
     const fields = {
-      id: this.id,
+      id: finalid,
       item: this.item,
       price: this.price,
       quantity: this.quantity,
