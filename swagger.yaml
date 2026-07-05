@@ -1,0 +1,177 @@
+openapi: 3.0.3
+info:
+  title: Order Analytics API
+  version: 1.0.0
+  description: Optimized OpenAPI specification for e-commerce analytics operations.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/orders/analytics/overview:
+    get:
+      tags:
+        - Analytics
+      summary: Get high-level sales and revenue overview metrics
+      operationId: getSalesOverview
+      responses:
+        '200':
+          description: High-level overview metrics computed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverviewResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/orders/analytics/category-breakdown:
+    get:
+      tags:
+        - Analytics
+      summary: Get orders and revenue breakdown grouped by item category
+      operationId: getCategoryBreakdown
+      responses:
+        '200':
+          description: Category metrics breakdown retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryBreakdownResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/orders/analytics/top-selling-products:
+    get:
+      tags:
+        - Analytics
+      summary: Get the top selling products ranked by quantity and revenue
+      operationId: getTopSellingProducts
+      responses:
+        '200':
+          description: Top selling products ranked successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopSellingProductsResponse'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    OverviewResponse:
+      type: object
+      required:
+        - totalOrders
+        - totalRevenue
+        - averageOrderValue
+      properties:
+        totalOrders:
+          type: integer
+          minimum: 0
+          example: 128
+        totalRevenue:
+          type: number
+          format: float
+          minimum: 0
+          example: 15499.75
+        averageOrderValue:
+          type: number
+          format: float
+          minimum: 0
+          example: 121.09
+
+    CategoryBreakdownResponse:
+      type: object
+      required:
+        - breakdown
+      properties:
+        breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryMetric'
+
+    CategoryMetric:
+      type: object
+      required:
+        - category
+        - orderCount
+        - revenue
+      properties:
+        category:
+          $ref: '#/components/schemas/ItemCategory'
+        orderCount:
+          type: integer
+          minimum: 0
+          example: 60
+        revenue:
+          type: number
+          format: float
+          minimum: 0
+          example: 7800.50
+
+    TopSellingProductsResponse:
+      type: object
+      required:
+        - products
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopSellingProduct'
+
+    TopSellingProduct:
+      type: object
+      required:
+        - category
+        - productLabel
+        - quantitySold
+        - revenue
+      properties:
+        category:
+          $ref: '#/components/schemas/ItemCategory'
+        productLabel:
+          type: string
+          example: 'Birthday Cake'
+        quantitySold:
+          type: integer
+          minimum: 0
+          example: 42
+        revenue:
+          type: number
+          format: float
+          minimum: 0
+          example: 3360.00
+
+    ItemCategory:
+      type: string
+      enum:
+        - cake
+        - book
+        - toy
+
+    ErrorResponse:
+      type: object
+      required:
+        - statusCode
+        - error
+        - message
+      properties:
+        statusCode:
+          type: integer
+          example: 500
+        error:
+          type: string
+          example: 'Internal Server Error'
+        message:
+          type: string
+          example: 'Failed to compute analytics metrics.'
