@@ -1,60 +1,52 @@
-import {
-  CakeBuilder,
-  IdentifiableCakeBuilder,
-} from './model/builders/Cake.builder';
-import {
-  IdentifiableOrderItemBuilder,
-  OrderBuilder,
-} from './model/builders/Order.builder';
-import { ItemCategory } from './model/IItem';
-import { DBMode, RepositoryFactory } from './repository/Repository.factory';
-
+import express, { NextFunction, Request, Response } from 'express';
+import config from './config';
+import helmet from 'helmet';
+import bodyparser from 'body-parser';
+import cors from 'cors';
+import requestLogger from './middleware/requestLogger';
+import routes from './routes';
+import { ApiException } from './util/exceptions/APIException';
 import logger from './util/logger';
+const app = express();
 
-async function main() {
-  // const path = config.storagePath.csv.cakes;
-  // const repository = new CakeOrderRepository(path);
-  // const orders = await repository.get('1');
-  // logger.info('List of orders: \n %o', orders);
-}
-async function DBSandBox() {
-  const dbOrder = await RepositoryFactory.create(
-    DBMode.FILE,
-    ItemCategory.CAKE,
-  );
+// config helmets
+app.use(helmet());
+// config body parser
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 
-  const cake = CakeBuilder.newBuilder()
-    .setType('Birthday')
-    .setFlavor('Chocolate')
-    .setFilling('Cream')
-    .setSize(10)
-    .setLayers(2)
-    .setFrostingType('Buttercream')
-    .setFrostingFlavor('Vanilla')
-    .setDecorationType('Sprinkles')
-    .setDecorationColor('Red')
-    .setCustomMessage('Happy Birthday!')
-    .setShape('Round')
-    .setAllergies('None')
-    .setSpecialIngredients('None')
-    .setPackagingType('Box')
-    .build();
-  const idCake = IdentifiableCakeBuilder.newBuilder().setCake(cake).build();
-  const order = OrderBuilder.newBuilder()
-    .setItem(cake)
-    .setPrice(100)
-    .setQuantity(1)
-    .build();
-  const idOrder = IdentifiableOrderItemBuilder.newBuilder()
-    .setOrder(order)
-    .setItem(idCake)
-    .build();
-  // use idOrder as needed here
-  await dbOrder.create(idOrder);
-  console.log((await dbOrder.getAll()).length);
-}
-// main();
+// config cors
+app.use(cors());
+// add middlewares
+app.use(requestLogger);
+// config routes
+app.use('/', routes);
 
-DBSandBox().catch((error) => {
-  logger.error('Error in DBSandBox: %o', error as Error);
+//config 404 handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    error: 'Not Found',
+  });
+});
+
+// config error handler
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof ApiException) {
+    const apiException = err as ApiException;
+    logger.error(
+      `API Exception of status ${apiException.status}: ${apiException.message}`,
+    );
+    res.status(apiException.status).json({
+      error: apiException.message,
+    });
+  } else {
+    logger.error('Unhandled Error: ' + err.message);
+    res.status(500).json({
+      error: 'Internal Server Error',
+    });
+  }
+});
+
+app.listen(config.port, config.host, () => {
+  console.log('Server is running on http://%s:%d', config.host, config.port);
 });
