@@ -5,8 +5,8 @@ import bodyparser from 'body-parser';
 import cors from 'cors';
 import requestLogger from './middleware/requestLogger';
 import routes from './routes';
-import { ApiException } from './util/exceptions/APIException';
 import logger from './util/logger';
+import { ApiException } from './util/exceptions/ApiException';
 const app = express();
 
 // config helmets
