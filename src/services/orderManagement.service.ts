@@ -1,11 +1,8 @@
 import { ServiceException } from '../util/exceptions/ServiceException';
 import logger from '../util/logger';
-import { RepositoryFactory } from '../repository/Repository.factory';
-import config from '../config';
 import { IIdentifiableOrderItem } from '../model/IOrder';
 import { ItemCategory } from '../model/IItem';
-import { IRepository } from '../repository/IRepository';
-
+import { getRepo } from '../util/index';
 export class OrderManagementService {
   //create an order
   public async createOrder(
@@ -14,7 +11,7 @@ export class OrderManagementService {
     // validate order
     this.validateOrder(order);
     // persit new order
-    const repo = await this.getRepo(order.getItem().getCategory());
+    const repo = await getRepo(order.getItem().getCategory());
     repo.create(order);
 
     return order;
@@ -23,7 +20,7 @@ export class OrderManagementService {
   public async getOrder(id: string): Promise<IIdentifiableOrderItem> {
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
-      const repo = await this.getRepo(category);
+      const repo = await getRepo(category);
       const order = await repo.get(id);
       if (order) {
         return order;
@@ -38,14 +35,14 @@ export class OrderManagementService {
   ): Promise<void> {
     // validate updated order
     this.validateOrder(updatedOrder);
-    const repo = await this.getRepo(updatedOrder.getItem().getCategory());
+    const repo = await getRepo(updatedOrder.getItem().getCategory());
     repo.update(updatedOrder);
   }
   //Delete Order
   public async deleteOrder(id: string): Promise<void> {
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
-      const repo = await this.getRepo(category);
+      const repo = await getRepo(category);
       const order = await repo.get(id);
       if (order) {
         repo.delete(id);
@@ -59,7 +56,7 @@ export class OrderManagementService {
     const allOrders: IIdentifiableOrderItem[] = [];
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
-      const repo = await this.getRepo(category);
+      const repo = await getRepo(category);
       const orders = await repo.getAll();
       allOrders.push(...orders);
     }
@@ -81,11 +78,6 @@ export class OrderManagementService {
     return allOrders.length;
   }
 
-  private async getRepo(
-    category: ItemCategory,
-  ): Promise<IRepository<IIdentifiableOrderItem>> {
-    return await RepositoryFactory.create(config.dbMode, category);
-  }
   private validateOrder(order: IIdentifiableOrderItem): void {
     if (!order.getItem() || order.getPrice() <= 0 || order.getQuantity() <= 0) {
       logger.error('Invalid order data');
