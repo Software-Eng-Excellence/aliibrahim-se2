@@ -1,6 +1,6 @@
 import config from '../config';
 import { ItemCategory } from '../model/IItem';
-import { IOrder } from '../model/IOrder';
+import { IIdentifiableOrderItem, IOrder } from '../model/IOrder';
 import { CakeOrderRepository } from './file/Cake.order.repository';
 import { Initializable, IRepository } from './IRepository';
 import { CakeRepository } from './sqlite/Cake.order.repository';
@@ -19,10 +19,10 @@ export class RepositoryFactory {
   public static async create(
     model: DBMode,
     category: ItemCategory,
-  ): Promise<IRepository<IOrder>> {
+  ): Promise<IRepository<IIdentifiableOrderItem>> {
     switch (model) {
       case DBMode.SQLITE:
-        let repository: IRepository<IOrder> & Initializable;
+        let repository: IRepository<IIdentifiableOrderItem> & Initializable;
         switch (category) {
           case ItemCategory.CAKE:
             repository = new OrderRepository(new CakeRepository());
@@ -33,17 +33,12 @@ export class RepositoryFactory {
         }
         await repository.init();
         return repository;
+      //depricated
       case DBMode.FILE:
-        switch (category) {
-          case ItemCategory.CAKE:
-            return new CakeOrderRepository(config.storagePath.csv.cakes);
-
-          default:
-            throw new Error('Unsupported category for file storage');
-        }
+        throw new Error('File storage is deprecated and not supported');
 
       case DBMode.POSTGRES:
-        let pgRepository: IRepository<IOrder> & Initializable;
+        let pgRepository: IRepository<IIdentifiableOrderItem> & Initializable;
         switch (category) {
           case ItemCategory.CAKE:
             pgRepository = new PostgresOrderRepository(
