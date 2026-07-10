@@ -111,6 +111,7 @@ export class CakeRepository
       logger.info('Cake retrieved with id: %s', id);
       return new PostgresCakeMapper().map(result.rows[0]);
     } catch (error: unknown) {
+      if (error instanceof ItemNotFoundException) throw error;
       logger.error('Failed to get cake with id: %s, error: %o', id, error);
       throw new DbException('Failed to get cake', error as Error);
     }
@@ -168,6 +169,7 @@ export class CakeRepository
       }
       logger.info('Cake deleted with id: %s', id);
     } catch (error: unknown) {
+      if (error instanceof ItemNotFoundException) throw error;
       logger.error('Failed to delete cake with id: %s, error: %o', id, error);
       throw new DbException('Failed to delete cake', error as Error);
     }

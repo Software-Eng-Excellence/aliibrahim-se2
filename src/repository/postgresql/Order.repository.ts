@@ -48,10 +48,8 @@ export class OrderRepository
     }
   }
   async create(order: IIdentifiableOrderItem): Promise<id> {
-    let conn;
     try {
-      conn = await ConnectionManager.getPool();
-      await conn.query('BEGIN');
+      const conn = await ConnectionManager.getPool();
       const item_id = await this.itemRepository.create(order.getItem());
       await conn.query(INSERT_ORDER, [
         order.getId(),
@@ -60,13 +58,10 @@ export class OrderRepository
         order.getQuantity(),
         item_id,
       ]);
-      await conn.query('COMMIT');
       logger.info('Order created successfully with ID: %s', order.getId());
       return order.getId();
     } catch (error: unknown) {
       logger.error('Failed to create order: %o', error);
-
-      conn && conn.query('ROLLBACK');
       throw new DbException('Failed to create order', error as Error);
     }
   }
@@ -127,10 +122,8 @@ export class OrderRepository
     }
   }
   async update(item: IIdentifiableOrderItem): Promise<void> {
-    let conn;
     try {
-      conn = await ConnectionManager.getPool();
-      conn.query('BEGIN');
+      const conn = await ConnectionManager.getPool();
       await this.itemRepository.update(item.getItem());
       await conn.query(UPDATE_ID, [
         item.getPrice(),
@@ -139,26 +132,42 @@ export class OrderRepository
         item.getItem().getId(),
         item.getId(),
       ]);
-      conn.query('COMMIT');
       logger.info('Order updated successfully with ID: %s', item.getId());
     } catch (error: unknown) {
       logger.error('Failed to update order: %o', error);
-      conn && conn.query('ROLLBACK');
       throw new DbException('Failed to update order', error as Error);
     }
   }
   async delete(id: id): Promise<void> {
-    let conn;
     try {
-      conn = await ConnectionManager.getPool();
-      await conn.query('BEGIN');
-      await this.itemRepository.delete(id);
+      const conn = await ConnectionManager.getPool();
+      const result = await conn.query<PostgreSQLOrder>(SELECT_BY_ID, [id]);
+      if (!result || result.rows.length === 0 || !result.rows[0]) {
+        throw new ItemNotFoundException(`Order with id ${id} not found`);
+      }
+      const item_id = (await this.get(id)).getItem().getId();
+
+      // Delete the order row first: if the linked item is already missing
+      // (e.g. left over from a prior partial failure), the order must still
+      // be removable rather than becoming permanently stuck.
       await conn.query(DELETE_ID, [id]);
-      await conn.query('COMMIT');
+      try {
+        await this.itemRepository.delete(item_id);
+      } catch (itemError: unknown) {
+        if (itemError instanceof ItemNotFoundException) {
+          logger.error(
+            'Item %s for order %s was already missing during delete',
+            item_id,
+            id,
+          );
+        } else {
+          throw itemError;
+        }
+      }
       logger.info('Order deleted successfully with ID: %s', id);
     } catch (error: unknown) {
+      if (error instanceof ItemNotFoundException) throw error;
       logger.error('Failed to delete order: %o', error);
-      conn && conn.query('ROLLBACK');
       throw new DbException('Failed to delete order', error as Error);
     }
   }

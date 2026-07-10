@@ -1,9 +1,7 @@
-import {
-  RepositoryFactory,
-  DBMode,
-} from '../../src/repository/Repository.factory';
+import { RepositoryFactory } from '../../src/repository/Repository.factory';
 import { ItemCategory } from '../../src/model/IItem';
 import { OrderRepository as PostgresOrderRepository } from '../../src/repository/postgresql/Order.repository';
+import { DBMode } from '../../src/config/types';
 
 describe('RepositoryFactory - PostgreSQL', () => {
   const categories = [ItemCategory.CAKE, ItemCategory.BOOK, ItemCategory.TOY];

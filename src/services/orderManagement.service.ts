@@ -3,6 +3,7 @@ import logger from '../util/logger';
 import { IIdentifiableOrderItem } from '../model/IOrder';
 import { ItemCategory } from '../model/IItem';
 import { getRepo } from '../util/index';
+import { ItemNotFoundException } from '../util/exceptions/repostiroyException';
 export class OrderManagementService {
   //create an order
   public async createOrder(
@@ -12,7 +13,7 @@ export class OrderManagementService {
     this.validateOrder(order);
     // persit new order
     const repo = await getRepo(order.getItem().getCategory());
-    repo.create(order);
+    await repo.create(order);
 
     return order;
   }
@@ -21,32 +22,35 @@ export class OrderManagementService {
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
       const repo = await getRepo(category);
-      const order = await repo.get(id);
-      if (order) {
-        return order;
+      try {
+        return await repo.get(id);
+      } catch (error) {
+        if (error instanceof ItemNotFoundException) continue;
+        throw error;
       }
     }
     throw new ServiceException('Order not found');
   }
   //Update Order
   public async updateOrder(
-    id: string,
     updatedOrder: IIdentifiableOrderItem,
   ): Promise<void> {
     // validate updated order
     this.validateOrder(updatedOrder);
     const repo = await getRepo(updatedOrder.getItem().getCategory());
-    repo.update(updatedOrder);
+    await repo.update(updatedOrder);
   }
   //Delete Order
   public async deleteOrder(id: string): Promise<void> {
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
       const repo = await getRepo(category);
-      const order = await repo.get(id);
-      if (order) {
-        repo.delete(id);
+      try {
+        await repo.delete(id);
         return;
+      } catch (error) {
+        if (error instanceof ItemNotFoundException) continue;
+        throw error;
       }
     }
     throw new ServiceException('Order not found');

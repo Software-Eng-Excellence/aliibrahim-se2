@@ -166,6 +166,21 @@ export class SQLiteCakeMapper implements IMapper<SQLiteCake, IdentifiableCake> {
     };
   }
 }
+export class JsonRequestCakeMapper implements IMapper<any, IdentifiableCake> {
+  map(data: any): IdentifiableCake {
+    return IdentifiableCakeBuilder.newBuilder()
+      .setCake(buildCake(data))
+      .setId(data.id)
+      .build();
+  }
+  reverse(data: IdentifiableCake) {
+    return {
+      ...reverseCake(data),
+      id: data.getId(),
+      category: data.getCategory(),
+    };
+  }
+}
 // camal case instead of doing the AS in queries
 export interface PostgresCake {
   id: string;

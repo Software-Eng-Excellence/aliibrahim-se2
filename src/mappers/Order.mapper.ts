@@ -5,6 +5,7 @@ import {
   OrderBuilder,
 } from '../model/builders/Order.builder';
 import { IIdentifiableItem, IItem } from '../model/IItem';
+import { IdentifiableOrderItem } from '../model/Order.model';
 export class CSVOrderMapper implements IMapper<string[], IOrder> {
   constructor(private itemMapper: IMapper<string[], IItem>) {}
 
@@ -84,7 +85,7 @@ export class PostgreSQLOrderMapper implements IMapper<
     const { row, item } = data;
     const order = OrderBuilder.newBuilder()
       .setId(row.id)
-      .setPrice(row.price)
+      .setPrice(Number(row.price))
       .setQuantity(row.quantity)
       .setItem(item)
       .build();
@@ -115,4 +116,40 @@ export interface PostgreSQLOrder {
   category: string;
   quantity: number;
   item_id: string;
+}
+interface JsonOrder {
+  id: string;
+  price: number;
+  category: string;
+  quantity: number;
+  item: JsonItem;
+}
+interface JsonItem {
+  id: string;
+}
+
+export class JsonRequestOrderMapper implements IMapper<
+  any,
+  IdentifiableOrderItem
+> {
+  constructor(private itemMapper: IMapper<any, IIdentifiableItem>) {}
+  map(data: any): IdentifiableOrderItem {
+    const item = this.itemMapper.map(data.item);
+    const order = OrderBuilder.newBuilder()
+      .setId(data.id)
+      .setPrice(data.price)
+      .setQuantity(data.quantity)
+      .setItem(item)
+      .build();
+    return IdentifiableOrderItemBuilder.newBuilder()
+      .setOrder(order)
+      .setItem(item)
+      .build();
+  }
+  reverse(data: IdentifiableOrderItem) {
+    return {
+      ...data,
+      category: data.getItem().getCategory(),
+    };
+  }
 }

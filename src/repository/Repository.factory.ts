@@ -1,20 +1,13 @@
-import config from '../config';
 import { ItemCategory } from '../model/IItem';
 import { IIdentifiableOrderItem, IOrder } from '../model/IOrder';
-import { CakeOrderRepository } from './file/Cake.order.repository';
 import { Initializable, IRepository } from './IRepository';
+import { DBMode } from '../config/types';
 import { CakeRepository } from './sqlite/Cake.order.repository';
 import { OrderRepository } from './sqlite/Order.repository';
 import { CakeRepository as PostgresCakeRepository } from './postgresql/Cake.order.repository';
 import { OrderRepository as PostgresOrderRepository } from './postgresql/Order.repository';
 import { BookRepository as PostgresBookRepository } from './postgresql/Book.order.repository';
 import { ToyRepository as PostgresToyRepository } from './postgresql/Toy.order.repository';
-
-export enum DBMode {
-  SQLITE,
-  FILE,
-  POSTGRES,
-}
 export class RepositoryFactory {
   public static async create(
     model: DBMode,
