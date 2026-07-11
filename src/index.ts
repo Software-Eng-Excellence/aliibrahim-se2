@@ -6,7 +6,7 @@ import cors from 'cors';
 import requestLogger from './middleware/requestLogger';
 import routes from './routes';
 import logger from './util/logger';
-import { ApiException } from './util/exceptions/ApiException';
+import { HttpException } from './util/exceptions/http/httpException';
 const app = express();
 
 // config helmets
@@ -31,13 +31,13 @@ app.use((req: Request, res: Response) => {
 
 // config error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ApiException) {
-    const apiException = err as ApiException;
+  if (err instanceof HttpException) {
+    const httpException = err as HttpException;
     logger.error(
-      `API Exception of status ${apiException.status}: ${apiException.message}`,
+      `HTTP Exception: ${httpException.status} - ${httpException.message}`,
     );
-    res.status(apiException.status).json({
-      error: apiException.message,
+    res.status(httpException.status).json({
+      error: httpException.message,
     });
   } else {
     logger.error('Unhandled Error: ' + err.message);

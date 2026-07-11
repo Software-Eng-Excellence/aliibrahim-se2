@@ -4,6 +4,8 @@ import { IIdentifiableOrderItem } from '../model/IOrder';
 import { ItemCategory } from '../model/IItem';
 import { getRepo } from '../util/index';
 import { ItemNotFoundException } from '../util/exceptions/repostiroyException';
+import { NotFoundException } from '../util/exceptions/http/NotFoundException';
+import { BadRequestException } from '../util/exceptions/http/BadRequestException';
 export class OrderManagementService {
   //create an order
   public async createOrder(
@@ -21,15 +23,13 @@ export class OrderManagementService {
   public async getOrder(id: string): Promise<IIdentifiableOrderItem> {
     const categories = Object.values(ItemCategory);
     for (const category of categories) {
-      const repo = await getRepo(category);
       try {
+        const repo = await getRepo(category);
+
         return await repo.get(id);
-      } catch (error) {
-        if (error instanceof ItemNotFoundException) continue;
-        throw error;
-      }
+      } catch (error) {}
     }
-    throw new ServiceException('Order not found');
+    throw new NotFoundException(`Order with id ${id} not found`);
   }
   //Update Order
   public async updateOrder(
@@ -53,7 +53,7 @@ export class OrderManagementService {
         throw error;
       }
     }
-    throw new ServiceException('Order not found');
+    throw new NotFoundException('Order not found');
   }
   //Get All Orders
   public async getAllOrders(): Promise<IIdentifiableOrderItem[]> {
@@ -85,7 +85,12 @@ export class OrderManagementService {
   private validateOrder(order: IIdentifiableOrderItem): void {
     if (!order.getItem() || order.getPrice() <= 0 || order.getQuantity() <= 0) {
       logger.error('Invalid order data');
-      throw new ServiceException('Invalid order data');
+      const details = {
+        ItemNotDefined: !order.getItem(),
+        InvalidPrice: order.getPrice() <= 0,
+        InvalidQuantity: order.getQuantity() <= 0,
+      };
+      throw new BadRequestException('Invalid order data', details);
     }
   }
 }
