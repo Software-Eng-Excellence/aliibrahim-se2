@@ -26,3 +26,9 @@ export class DbException extends Error {
     this.message = `${message}: ${error.message}`;
   }
 }
+export class DuplicateItemException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DuplicateItemException';
+  }
+}
