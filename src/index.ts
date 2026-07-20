@@ -6,7 +6,7 @@ import cors from 'cors';
 import requestLogger from './middleware/requestLogger';
 import routes from './routes';
 import logger from './util/logger';
-import { HttpException } from './util/exceptions/http/httpException';
+import { HttpException } from './util/exceptions/http/HttpException';
 const app = express();
 
 // config helmets
@@ -48,5 +48,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(config.port, config.host, () => {
-  console.log('Server is running on http://%s:%d', config.host, config.port);
+  logger.info('Server is running on http://%s:%d', config.host, config.port);
 });
