@@ -3,11 +3,12 @@ import { User } from '../model/User.model';
 import { UserBuilder } from '../model/builders/User.builder';
 import { NotFoundException } from '../util/exceptions/http/NotFoundException';
 import { ConflictException } from '../util/exceptions/http/ConflictException';
+import { InvalidCredentialsException } from '../util/exceptions/http/AuthenticationException';
 import {
   DuplicateItemException,
   ItemNotFoundException,
 } from '../util/exceptions/repostiroyException';
-import { hashPassword } from '../util/password';
+import { hashPassword, verifyPassword } from '../util/password';
 
 export class UserService {
   private readonly repo = new UserRepository();
@@ -85,5 +86,22 @@ export class UserService {
       }
       throw error;
     }
+  }
+
+  async validateUser(email: string, password: string): Promise<string> {
+    const repo = await this.getRepo();
+    let user: User;
+    try {
+      user = await repo.getByEmail(email);
+    } catch (error) {
+      if (error instanceof ItemNotFoundException) {
+        throw new InvalidCredentialsException();
+      }
+      throw error;
+    }
+    if (!verifyPassword(password, user.getPassword())) {
+      throw new InvalidCredentialsException();
+    }
+    return user.getId();
   }
 }

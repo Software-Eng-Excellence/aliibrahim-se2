@@ -21,6 +21,7 @@ const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${tableName} (
 );`;
 const INSERT_USER = `INSERT INTO ${tableName} (id, name, email, password) VALUES ($1, $2, $3, $4)`;
 const SELECT_BY_ID = `SELECT id, name, email, password FROM ${tableName} WHERE id = $1`;
+const SELECT_BY_EMAIL = `SELECT id, name, email, password FROM ${tableName} WHERE email = $1`;
 const SELECT_ALL = `SELECT id, name, email, password FROM ${tableName}`;
 const DELETE = `DELETE FROM ${tableName} WHERE id = $1`;
 const UPDATE_ID = `UPDATE ${tableName} SET name = $1, email = $2, password = $3 WHERE id = $4`;
@@ -83,6 +84,26 @@ export class UserRepository implements IRepository<User>, Initializable {
       if (error instanceof ItemNotFoundException) throw error;
       logger.error('Failed to get user with id: %s, error: %o', id, error);
       throw new DbException('Failed to get user', error as Error);
+    }
+  }
+  async getByEmail(email: string): Promise<User> {
+    try {
+      const conn = await ConnectionManager.getPool();
+      const result = await conn.query<PostgresUser>(SELECT_BY_EMAIL, [email]);
+      if (!result || result.rowCount === 0) {
+        logger.error('User not found with email: %s', email);
+        throw new ItemNotFoundException(`User not found with email: ${email}`);
+      }
+      logger.info('User retrieved with email: %s', email);
+      return new PostgresUserMapper().map(result.rows[0]);
+    } catch (error: unknown) {
+      if (error instanceof ItemNotFoundException) throw error;
+      logger.error(
+        'Failed to get user with email: %s, error: %o',
+        email,
+        error,
+      );
+      throw new DbException('Failed to get user by email', error as Error);
     }
   }
   async getAll(): Promise<User[]> {
