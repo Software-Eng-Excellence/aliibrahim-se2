@@ -22,6 +22,6 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
   //verify token if not valid throw auth error
   const payload = authService.verify(token);
 
-  (req as AuthenticatedRequest).userId = payload.userId;
+  (req as AuthenticatedRequest).user = payload;
   next();
 }

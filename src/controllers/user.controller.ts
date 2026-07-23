@@ -4,7 +4,7 @@ import { JsonUserMapper } from '../mappers/User.mapper';
 import { BadRequestException } from '../util/exceptions/http/BadRequestException';
 
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   //create a user
   public async createUser(req: Request, res: Response) {

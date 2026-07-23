@@ -1,6 +1,7 @@
 import { IMapper } from './IMapper';
 import { User } from '../model/User.model';
 import { UserBuilder } from '../model/builders/User.builder';
+import { toRole } from '../config/roles';
 
 export interface PostgresUser {
   id: string;
@@ -17,7 +18,7 @@ export class PostgresUserMapper implements IMapper<PostgresUser, User> {
       .setName(data.name)
       .setEmail(data.email)
       .setPassword(data.password)
-      .setRole(data.role)
+      .setRole(toRole(data.role))
       .build();
   }
   reverse(data: User): PostgresUser {

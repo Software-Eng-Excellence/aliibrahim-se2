@@ -1,13 +1,14 @@
 import { id } from '../../repository/IRepository';
 import { User } from '../User.model';
 import { UserValidator } from '../validators/User.validator';
+import { ROLE } from '../../config/roles';
 
 export class UserBuilder {
   private id?: id;
   private name!: string;
   private email!: string;
   private password!: string;
-  private role!: string;
+  private role!: ROLE;
   public static newBuilder(): UserBuilder {
     return new UserBuilder();
   }
@@ -31,7 +32,7 @@ export class UserBuilder {
     this.password = password;
     return this;
   }
-  setRole(role: string): UserBuilder {
+  setRole(role: ROLE): UserBuilder {
     this.role = role;
     return this;
   }
@@ -41,7 +42,7 @@ export class UserBuilder {
       name: this.name,
       email: this.email,
       password: this.password,
-      role: this.role || 'user',
+      role: this.role || ROLE.user,
     };
     UserValidator.validate(fields);
     const finalId = this.id || this.generateRandomAlphanumericId();

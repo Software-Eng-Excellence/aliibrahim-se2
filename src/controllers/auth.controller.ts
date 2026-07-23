@@ -18,8 +18,11 @@ export class AuthenticationController {
       });
     }
     try {
-      const userID = await this.userService.validateUser(email, password);
-      this.authService.persistAuthentication(res, userID);
+      const user = await this.userService.validateUser(email, password);
+      this.authService.persistAuthentication(res, {
+        userId: user.getId(),
+        role: user.getRole(),
+      });
       res.status(200).json({
         message: 'Login successful',
       });
@@ -31,7 +34,6 @@ export class AuthenticationController {
     }
   }
   async logout(req: Request, res: Response) {
-    const authReq = req as AuthenticatedRequest;
     this.authService.clearTokens(res);
     res.status(200).json({
       message: 'Logout successful',

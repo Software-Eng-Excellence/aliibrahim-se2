@@ -9,6 +9,7 @@ import {
   ItemNotFoundException,
 } from '../util/exceptions/repostiroyException';
 import { hashPassword, verifyPassword } from '../util/password';
+import { id } from '../repository/IRepository';
 
 export class UserService {
   private readonly repo = new UserRepository();
@@ -90,7 +91,7 @@ export class UserService {
     }
   }
 
-  async validateUser(email: string, password: string): Promise<string> {
+  async validateUser(email: string, password: string): Promise<User> {
     const repo = await this.getRepo();
     let user: User;
     try {
@@ -104,6 +105,6 @@ export class UserService {
     if (!verifyPassword(password, user.getPassword())) {
       throw new InvalidCredentialsException();
     }
-    return user.getId();
+    return user;
   }
 }

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import { TokenPayload } from '../config/types';
+import { TokenPayload, UserPayload } from '../config/types';
 import {
   InvalidTokenException,
   TokenExpiredException,
@@ -17,20 +17,20 @@ export class AuthenticationService {
     private refreshTokenExpiry = config.auth.refreshTokenExpiry,
   ) {}
 
-  generateToken(userId: string): string {
-    return jwt.sign({ userId }, this.jwtSecret, {
+  generateToken(payload: UserPayload): string {
+    return jwt.sign(payload, this.jwtSecret, {
       expiresIn: this.tokenExpiry,
     });
   }
-  generateRefreshToken(userId: string): string {
-    return jwt.sign({ userId }, this.jwtSecret, {
+  generateRefreshToken(payload: UserPayload): string {
+    return jwt.sign(payload, this.jwtSecret, {
       expiresIn: this.refreshTokenExpiry,
     });
   }
 
   verify(token: string): TokenPayload {
     try {
-      const decoded = jwt.verify(token, this.jwtSecret) as TokenPayload;
+      const decoded = jwt.verify(token, this.jwtSecret) as UserPayload;
       return decoded;
     } catch (error) {
       logger.error('Token verification failed', error);
@@ -48,7 +48,7 @@ export class AuthenticationService {
     if (!payload) {
       throw new InvalidTokenException();
     }
-    return this.generateToken(payload.userId);
+    return this.generateToken({ userId: payload.userId, role: payload.role });
   }
   setTokenIntoCookie(res: Response, token: string): void {
     res.cookie('token', token, {
@@ -68,9 +68,9 @@ export class AuthenticationService {
     res.clearCookie('token');
     res.clearCookie('refreshToken');
   }
-  persistAuthentication(res: Response, userId: string): void {
-    const token = this.generateToken(userId);
-    const refreshToken = this.generateRefreshToken(userId);
+  persistAuthentication(res: Response, payload: UserPayload): void {
+    const token = this.generateToken(payload);
+    const refreshToken = this.generateRefreshToken(payload);
     this.setTokenIntoCookie(res, token);
     this.setRefreshTokenIntoCookie(res, refreshToken);
   }

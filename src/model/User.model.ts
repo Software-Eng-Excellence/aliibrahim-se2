@@ -1,3 +1,4 @@
+import { ROLE } from '../config/roles';
 import { id, ID } from '../repository/IRepository';
 
 export class User implements ID {
@@ -6,7 +7,7 @@ export class User implements ID {
     private name: string,
     private email: string,
     private password: string,
-    private role: string,
+    private role: ROLE,
   ) {}
 
   getId(): id {
@@ -24,7 +25,7 @@ export class User implements ID {
   getPassword(): string {
     return this.password;
   }
-  getRole(): string {
+  getRole(): ROLE {
     return this.role;
   }
 }
