@@ -7,7 +7,7 @@ export class UserBuilder {
   private name!: string;
   private email!: string;
   private password!: string;
-
+  private role!: string;
   public static newBuilder(): UserBuilder {
     return new UserBuilder();
   }
@@ -31,16 +31,27 @@ export class UserBuilder {
     this.password = password;
     return this;
   }
+  setRole(role: string): UserBuilder {
+    this.role = role;
+    return this;
+  }
 
   build(): User {
     const fields = {
       name: this.name,
       email: this.email,
       password: this.password,
+      role: this.role || 'user',
     };
     UserValidator.validate(fields);
     const finalId = this.id || this.generateRandomAlphanumericId();
-    return new User(finalId, fields.name, fields.email, fields.password);
+    return new User(
+      finalId,
+      fields.name,
+      fields.email,
+      fields.password,
+      fields.role,
+    );
   }
 
   private generateRandomAlphanumericId(): string {

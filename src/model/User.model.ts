@@ -6,6 +6,7 @@ export class User implements ID {
     private name: string,
     private email: string,
     private password: string,
+    private role: string,
   ) {}
 
   getId(): id {
@@ -22,5 +23,8 @@ export class User implements ID {
 
   getPassword(): string {
     return this.password;
+  }
+  getRole(): string {
+    return this.role;
   }
 }

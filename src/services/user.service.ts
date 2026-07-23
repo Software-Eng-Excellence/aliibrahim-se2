@@ -25,6 +25,7 @@ export class UserService {
       .setName(user.getName())
       .setEmail(user.getEmail())
       .setPassword(hashPassword(user.getPassword()))
+      .setRole(user.getRole())
       .build();
     try {
       await repo.create(userToPersist);
@@ -61,6 +62,7 @@ export class UserService {
       .setName(user.getName())
       .setEmail(user.getEmail())
       .setPassword(hashPassword(user.getPassword()))
+      .setRole(user.getRole())
       .build();
     try {
       await repo.update(userToPersist);

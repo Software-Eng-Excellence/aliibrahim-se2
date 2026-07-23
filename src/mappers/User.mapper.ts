@@ -7,6 +7,7 @@ export interface PostgresUser {
   name: string;
   email: string;
   password: string;
+  role: string;
 }
 
 export class PostgresUserMapper implements IMapper<PostgresUser, User> {
@@ -16,6 +17,7 @@ export class PostgresUserMapper implements IMapper<PostgresUser, User> {
       .setName(data.name)
       .setEmail(data.email)
       .setPassword(data.password)
+      .setRole(data.role)
       .build();
   }
   reverse(data: User): PostgresUser {
@@ -24,6 +26,7 @@ export class PostgresUserMapper implements IMapper<PostgresUser, User> {
       name: data.getName(),
       email: data.getEmail(),
       password: data.getPassword(),
+      role: data.getRole(),
     };
   }
 }
@@ -39,6 +42,7 @@ export interface JsonUserResponse {
   id: string;
   name: string;
   email: string;
+  role: string;
 }
 
 // Deliberately not an IMapper: reverse() must never round-trip the password
@@ -57,6 +61,7 @@ export class JsonUserMapper {
       id: data.getId(),
       name: data.getName(),
       email: data.getEmail(),
+      role: data.getRole(),
     };
   }
 }

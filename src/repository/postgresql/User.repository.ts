@@ -19,12 +19,13 @@ const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS ${tableName} (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
 );`;
-const INSERT_USER = `INSERT INTO ${tableName} (id, name, email, password) VALUES ($1, $2, $3, $4)`;
-const SELECT_BY_ID = `SELECT id, name, email, password FROM ${tableName} WHERE id = $1`;
-const SELECT_BY_EMAIL = `SELECT id, name, email, password FROM ${tableName} WHERE email = $1`;
-const SELECT_ALL = `SELECT id, name, email, password FROM ${tableName}`;
+const ALTER_TABLE_ADD_ROLE = `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS role VARCHAR(255) NOT NULL DEFAULT 'user';`;
+const INSERT_USER = `INSERT INTO ${tableName} (id, name, email, password, role) VALUES ($1, $2, $3, $4, $5)`;
+const SELECT_BY_ID = `SELECT id, name, email, password, role FROM ${tableName} WHERE id = $1`;
+const SELECT_BY_EMAIL = `SELECT id, name, email, password, role FROM ${tableName} WHERE email = $1`;
+const SELECT_ALL = `SELECT id, name, email, password, role FROM ${tableName}`;
 const DELETE = `DELETE FROM ${tableName} WHERE id = $1`;
-const UPDATE_ID = `UPDATE ${tableName} SET name = $1, email = $2, password = $3 WHERE id = $4`;
+const UPDATE_ID = `UPDATE ${tableName} SET name = $1, email = $2, password = $3, role = $4 WHERE id = $5`;
 
 function isUniqueViolation(error: unknown): boolean {
   return (
@@ -40,6 +41,7 @@ export class UserRepository implements IRepository<User>, Initializable {
     try {
       const conn = await ConnectionManager.getPool();
       await conn.query(CREATE_TABLE);
+      await conn.query(ALTER_TABLE_ADD_ROLE);
       logger.info('Users table initialized');
     } catch (error: unknown) {
       logger.error('Failed to initialize users table: %o', error);
@@ -57,6 +59,7 @@ export class UserRepository implements IRepository<User>, Initializable {
         item.getName(),
         item.getEmail(),
         item.getPassword(),
+        item.getRole(),
       ]);
       return item.getId();
     } catch (error: unknown) {
@@ -127,6 +130,7 @@ export class UserRepository implements IRepository<User>, Initializable {
         item.getName(),
         item.getEmail(),
         item.getPassword(),
+        item.getRole(),
         item.getId(),
       ]);
       if (result.rowCount === 0) {
