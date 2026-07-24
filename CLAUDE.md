@@ -36,6 +36,8 @@ Config is loaded via `dotenv` from a `.env` file at the repo root (`src/config/i
 
 The active storage backend is a hardcoded value in `src/config/index.ts` (`dbMode: DBMode.POSTGRES`) — change this constant to switch between `POSTGRES`, `SQLITE`, or the deprecated `FILE` mode.
 
+Auth-related env vars (`src/config/index.ts`, `auth` block): `JWT_SECRET`, `JWT_EXPIRY` (default `15m`), `JWT_REFRESH_EXPIRY` (default `7d`).
+
 ## Architecture
 
 ### Request pipeline
@@ -85,3 +87,14 @@ The generic `Order` (`src/model/Order.model.ts`, `IOrder`/`IIdentifiableOrderIte
 ### Parsers
 
 `src/parsers/{csv,json,xml}Parser.ts` are low-level file-format readers/writers used by mappers for the file-backed formats (independent of the parser's target category).
+
+### Authentication & authorization
+
+Users are a parallel stack to the product categories (model/builder/validator/mapper/repository under the same directories, e.g. `src/model/User.model.ts`, `src/model/builders/User.builder.ts`, `src/repository/postgresql/User.repository.ts`), plus a dedicated auth layer:
+
+- `AuthenticationService` (`src/services/Authentication.service.ts`) — singleton (`getInstance()`); signs/verifies JWTs (`jsonwebtoken`) and reads/writes the `token`/`refreshToken` httpOnly cookies (`cookie-parser` is registered in `src/index.ts`). `persistAuthentication` issues both tokens on login; `clearTokens` removes them on logout.
+- `authenticate` middleware (`src/middleware/auth.ts`) — reads `token`/`refreshToken` from cookies, transparently mints a new access token from the refresh token when the access token is missing, verifies it, and attaches `userId` to the request (typed via `AuthenticatedRequest` in `src/config/types.ts`). Throws `AuthenticationFailedException`/`InvalidTokenException`/`TokenExpiredException` (`src/util/exceptions/http/AuthenticationException.ts`, all 401) on failure.
+- `AuthenticationController` (`src/controllers/auth.controller.ts`) + `auth.route.ts` — `POST /auth/login` (validates credentials via `UserService.validateUser`, then `persistAuthentication`), `GET /auth/logout` (`clearTokens`). Not behind `authenticate`.
+- `UserService` (`src/services/user.service.ts`) — user CRUD plus `validateUser(email, password)` which hashes/verifies via `src/util/password.ts` and returns the user id for login. Passwords are hashed before persisting in `createUser`/`updateUser`.
+- Routes (`src/routes/index.ts`): `/orders` and `/orders/analytics` are gated by `authenticate` at the router-mount level; `/users` gates each route individually in `user.route.ts` (`POST /users` — create/register — is intentionally open, the rest require `authenticate`); `/auth` is fully open.
+- `src/config/roles.ts` defines `ROLE` (`admin`/`user`/`guest`/`manager`) and a `Permission` enum with a `rolePermissions` map from role to allowed permissions. The `User` model/builder carry a `role` field, but nothing in the middleware/controllers currently reads `rolePermissions` to enforce permission checks yet — `authenticate` only verifies identity, not authorization. Treat this as scaffolding when working on RBAC-related tasks.
