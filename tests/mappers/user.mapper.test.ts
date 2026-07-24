@@ -2,6 +2,7 @@ import {
   JsonUserMapper,
   PostgresUserMapper,
 } from '../../src/mappers/User.mapper';
+import { ROLE } from '../../src/config/roles';
 
 describe('JsonUserMapper', () => {
   it('maps a request body into a User, generating an id when absent', () => {
@@ -31,6 +32,7 @@ describe('JsonUserMapper', () => {
       id: 'USR-1',
       name: 'Jane Doe',
       email: 'jane.doe@example.com',
+      role: ROLE.user,
     });
     expect(response).not.toHaveProperty('password');
   });
@@ -49,6 +51,7 @@ describe('PostgresUserMapper', () => {
       name: 'Jane Doe',
       email: 'jane.doe@example.com',
       password: 'hashed-password',
+      role: ROLE.user,
     };
 
     const mapper = new PostgresUserMapper();

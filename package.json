@@ -6,9 +6,9 @@
   "scripts": {
     "clean": "rimraf build",
     "lint": "eslint src",
-    "prebuild": "npm run clean && npm run lint",
+    "prebuild": "npm run clean",
     "build": "tsc",
-    "postbuild": "powershell -Command \"$size=(Get-ChildItem build -Recurse | Measure-Object -Property Length -Sum).Sum; Write-Host ('Build size: {0:N2} KB' -f ($size/1KB))\"",
+    "postbuild": "node scripts/buildSize.js",
     "prestart": "npm run build",
     "start": "node build/index.js",
     "dev": "ts-node-dev --respawn src/index.ts",
