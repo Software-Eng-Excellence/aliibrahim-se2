@@ -17,7 +17,7 @@ export async function readXMLFile(filePath: string): Promise<any> {
     const parser = new XMLParser();
     return parser.parse(xmlData);
   } catch (error) {
-    throw new Error(`Error reading XML file: ${error}`);
+    throw new Error(`Error reading XML file: ${error}`, { cause: error });
   }
 }
 
@@ -34,6 +34,6 @@ export async function writeXMLFile(filePath: string, data: any): Promise<void> {
     const xmlContent = builder.build(data);
     await fs.writeFile(filePath, xmlContent, 'utf-8');
   } catch (error) {
-    throw new Error(`Error writing XML file: ${error}`);
+    throw new Error(`Error writing XML file: ${error}`, { cause: error });
   }
 }

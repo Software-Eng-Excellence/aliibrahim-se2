@@ -1,4 +1,3 @@
-import { ServiceException } from '../util/exceptions/ServiceException';
 import logger from '../util/logger';
 import { IIdentifiableOrderItem } from '../model/IOrder';
 import { ItemCategory } from '../model/IItem';
@@ -27,7 +26,9 @@ export class OrderManagementService {
         const repo = await getRepo(category);
 
         return await repo.get(id);
-      } catch (error) {}
+      } catch {
+        continue;
+      }
     }
     throw new NotFoundException(`Order with id ${id} not found`);
   }

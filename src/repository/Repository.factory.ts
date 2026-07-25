@@ -1,5 +1,5 @@
 import { ItemCategory } from '../model/IItem';
-import { IIdentifiableOrderItem, IOrder } from '../model/IOrder';
+import { IIdentifiableOrderItem } from '../model/IOrder';
 import { Initializable, IRepository } from './IRepository';
 import { DBMode } from '../config/types';
 import { CakeRepository } from './sqlite/Cake.order.repository';
@@ -14,7 +14,7 @@ export class RepositoryFactory {
     category: ItemCategory,
   ): Promise<IRepository<IIdentifiableOrderItem>> {
     switch (model) {
-      case DBMode.SQLITE:
+      case DBMode.SQLITE: {
         let repository: IRepository<IIdentifiableOrderItem> & Initializable;
         switch (category) {
           case ItemCategory.CAKE:
@@ -26,11 +26,12 @@ export class RepositoryFactory {
         }
         await repository.init();
         return repository;
+      }
       //depricated
       case DBMode.FILE:
         throw new Error('File storage is deprecated and not supported');
 
-      case DBMode.POSTGRES:
+      case DBMode.POSTGRES: {
         let pgRepository: IRepository<IIdentifiableOrderItem> & Initializable;
         switch (category) {
           case ItemCategory.CAKE:
@@ -54,6 +55,7 @@ export class RepositoryFactory {
 
         await pgRepository.init();
         return pgRepository;
+      }
       default:
         throw new Error('Invalid DBMode');
     }

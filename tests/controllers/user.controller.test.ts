@@ -57,6 +57,7 @@ describe('UserController', () => {
       id: 'USR-1',
       name: 'Jane Doe',
       email: 'jane.doe@example.com',
+      role: 'user',
     });
   });
 
@@ -75,6 +76,7 @@ describe('UserController', () => {
       id: 'USR-1',
       name: 'Jane Doe',
       email: 'jane.doe@example.com',
+      role: 'user',
     });
   });
 
@@ -102,8 +104,18 @@ describe('UserController', () => {
 
     expect(mockResponse.status).toHaveBeenCalledWith(200);
     expect(mockResponse.json).toHaveBeenCalledWith([
-      { id: 'USR-1', name: 'Jane Doe', email: 'jane.doe@example.com' },
-      { id: 'USR-2', name: 'Jane Doe', email: 'jane.doe@example.com' },
+      {
+        id: 'USR-1',
+        name: 'Jane Doe',
+        email: 'jane.doe@example.com',
+        role: 'user',
+      },
+      {
+        id: 'USR-2',
+        name: 'Jane Doe',
+        email: 'jane.doe@example.com',
+        role: 'user',
+      },
     ]);
   });
 

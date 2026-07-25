@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { OrderManagementService } from '../services/orderManagement.service';
 import { IdentifiableOrderItem } from '../model/Order.model';
 

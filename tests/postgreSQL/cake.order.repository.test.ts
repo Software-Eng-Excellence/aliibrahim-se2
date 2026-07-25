@@ -11,11 +11,16 @@ import {
 
 const tableName = ItemCategory.CAKE;
 
-describe('CakeRepository - PostgreSQL Integration Tests', () => {
+// These tests hit a real Postgres database (DATABASE_URL) and are skipped
+// in CI, where no such database is available; run them locally with a .env.
+const describeIfDb = process.env.DATABASE_URL ? describe : describe.skip;
+
+describeIfDb('CakeRepository - PostgreSQL Integration Tests', () => {
   let repository: CakeRepository;
-  const pool = ConnectionManager.getPool();
+  let pool: ReturnType<typeof ConnectionManager.getPool>;
 
   beforeAll(async () => {
+    pool = ConnectionManager.getPool();
     repository = new CakeRepository();
     // Initialize table schema in Neon before tests run
     await repository.init();

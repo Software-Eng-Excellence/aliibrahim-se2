@@ -61,7 +61,7 @@ export class OrderRepository
       return order.getId();
     } catch (error: unknown) {
       logger.error('Failed to create order: %o', error);
-      conn && conn.exec('ROLLBACK');
+      if (conn) conn.exec('ROLLBACK');
       throw new DbException('Failed to create order', error as Error);
     }
   }
@@ -139,7 +139,7 @@ export class OrderRepository
       conn.exec('COMMIT');
     } catch (error: unknown) {
       logger.error('Failed to update order: %o', error);
-      conn && conn.exec('ROLLBACK');
+      if (conn) conn.exec('ROLLBACK');
       throw new DbException('Failed to update order', error as Error);
     }
   }
@@ -153,7 +153,7 @@ export class OrderRepository
       conn.exec('COMMIT');
     } catch (error: unknown) {
       logger.error('Failed to delete order: %o', error);
-      conn && conn.exec('ROLLBACK');
+      if (conn) conn.exec('ROLLBACK');
       throw new DbException('Failed to delete order', error as Error);
     }
   }

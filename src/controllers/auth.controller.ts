@@ -2,7 +2,6 @@ import { AuthenticationService } from '../services/Authentication.service';
 import { Request, Response } from 'express';
 import { BadRequestException } from '../util/exceptions/http/BadRequestException';
 import { UserService } from '../services/user.service';
-import { AuthenticatedRequest } from '../config/types';
 export class AuthenticationController {
   constructor(
     private authService: AuthenticationService,
@@ -26,11 +25,14 @@ export class AuthenticationController {
       res.status(200).json({
         message: 'Login successful',
       });
-    } catch (error) {
-      if ((error as Error).message === 'Invalid email or password') {
+    } catch (error: unknown) {
+      if (
+        error instanceof Error &&
+        error.message === 'Invalid email or password'
+      ) {
         throw new BadRequestException('Invalid email or password');
       }
-      throw new Error('An error occurred during login');
+      throw new Error('An error occurred during login', { cause: error });
     }
   }
   async logout(req: Request, res: Response) {

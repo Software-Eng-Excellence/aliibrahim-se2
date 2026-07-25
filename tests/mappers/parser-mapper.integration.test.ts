@@ -12,6 +12,7 @@ import {
 import { readCSVFile, writeCSVFile } from '../../src/parsers/csvParser';
 import { readJSONFile, writeJSONFile } from '../../src/parsers/jsonParser';
 import { readXMLFile, writeXMLFile } from '../../src/parsers/xmlParser';
+import { ItemCategory } from '../../src/model/IItem';
 
 const tempDir = path.join(__dirname, 'temp');
 
@@ -84,7 +85,7 @@ describe('Cake parsing + mapper integration', () => {
     expect(cake.getFilling()).toBe('Cream');
     expect(cake.getFlavor()).toBe('Chocolate');
     expect(cake.getPackagingType()).toBe('Box');
-    expect(cake.getCategory()).toBe(0);
+    expect(cake.getCategory()).toBe(ItemCategory.CAKE);
   });
 
   it('handles JSON file', async () => {

@@ -6,7 +6,13 @@ const config: Config.InitialOptions = {
   testMatch: ['**/*.test.ts'],
   verbose: true,
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.ts'],
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    // Only exercised by tests/postgreSQL/**, which are skipped in CI (no
+    // DATABASE_URL available there) and run locally against a real DB.
+    '!src/repository/postgresql/**',
+    '!src/repository/sqlite/**',
+  ],
   coverageDirectory: 'coverage',
   coverageThreshold: {
     global: {

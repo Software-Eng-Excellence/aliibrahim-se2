@@ -9,7 +9,7 @@ export async function readJSONFile(filePath: string): Promise<any> {
     const fileContent = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(fileContent);
   } catch (error) {
-    throw new Error(`Error reading JSON file: ${error}`);
+    throw new Error(`Error reading JSON file: ${error}`, { cause: error });
   }
 }
 /**
@@ -27,6 +27,6 @@ export async function writeJSONFile(
     const jsonContent = JSON.stringify(data, null, 2); // Pretty print with 2 spaces
     await fs.writeFile(filePath, jsonContent, 'utf-8');
   } catch (error) {
-    throw new Error(`Error writing JSON file: ${error}`);
+    throw new Error(`Error writing JSON file: ${error}`, { cause: error });
   }
 }

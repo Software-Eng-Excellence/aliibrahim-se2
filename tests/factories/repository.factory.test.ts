@@ -6,10 +6,16 @@ import { DBMode } from '../../src/config/types';
 describe('RepositoryFactory - PostgreSQL', () => {
   const categories = [ItemCategory.CAKE, ItemCategory.BOOK, ItemCategory.TOY];
 
-  categories.forEach((category) => {
-    it(`should return an initialized PostgresOrderRepository for ${category}`, async () => {
-      const repo = await RepositoryFactory.create(DBMode.POSTGRES, category);
-      expect(repo).toBeInstanceOf(PostgresOrderRepository);
+  // These cases spin up a real PostgresOrderRepository against DATABASE_URL;
+  // skip in CI, where no database is available, and run them locally with a .env.
+  const describeIfDb = process.env.DATABASE_URL ? describe : describe.skip;
+
+  describeIfDb('with a live database', () => {
+    categories.forEach((category) => {
+      it(`should return an initialized PostgresOrderRepository for ${category}`, async () => {
+        const repo = await RepositoryFactory.create(DBMode.POSTGRES, category);
+        expect(repo).toBeInstanceOf(PostgresOrderRepository);
+      });
     });
   });
 

@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import config from './config';
 import helmet from 'helmet';
 import bodyparser from 'body-parser';
@@ -35,7 +35,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // config error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response) => {
   if (err instanceof HttpException) {
     const httpException = err as HttpException;
     logger.error(

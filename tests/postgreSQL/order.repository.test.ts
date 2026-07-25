@@ -15,12 +15,17 @@ import {
   Initializable,
 } from '../../src/repository/IRepository';
 
-describe('OrderRepository - PostgreSQL Unit & Integration Tests', () => {
+// These tests construct a real ConnectionManager pool (requiring DATABASE_URL)
+// even though pool.query is mocked throughout; skip in CI where no database
+// is configured, and run them locally with a .env.
+const describeIfDb = process.env.DATABASE_URL ? describe : describe.skip;
+
+describeIfDb('OrderRepository - PostgreSQL Unit & Integration Tests', () => {
   let orderRepository: OrderRepository;
   let mockItemRepository: jest.Mocked<
     IRepository<IIdentifiableItem> & Initializable
   >;
-  const pool = ConnectionManager.getPool();
+  let pool: ReturnType<typeof ConnectionManager.getPool>;
 
   // Pure domain entity stubs to avoid builder dependency overhead
   const stubItem: jest.Mocked<IIdentifiableItem> = {
@@ -37,6 +42,7 @@ describe('OrderRepository - PostgreSQL Unit & Integration Tests', () => {
 
   beforeEach(() => {
     jest.setTimeout(15000);
+    pool = ConnectionManager.getPool();
 
     // Completely mock the sub-item repository dependency to isolate Order units
     mockItemRepository = {

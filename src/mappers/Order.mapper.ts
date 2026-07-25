@@ -117,17 +117,6 @@ export interface PostgreSQLOrder {
   quantity: number;
   item_id: string;
 }
-interface JsonOrder {
-  id: string;
-  price: number;
-  category: string;
-  quantity: number;
-  item: JsonItem;
-}
-interface JsonItem {
-  id: string;
-}
-
 export class JsonRequestOrderMapper implements IMapper<
   any,
   IdentifiableOrderItem

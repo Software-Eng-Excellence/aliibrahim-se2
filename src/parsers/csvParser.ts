@@ -37,7 +37,7 @@ export async function readCSVFile(
       );
     });
   } catch (error) {
-    throw new Error(`Error reading CSV file: ${error}`);
+    throw new Error(`Error reading CSV file: ${error}`, { cause: error });
   }
 }
 
@@ -60,6 +60,6 @@ export async function writeCSVFile(
     });
     await fs.writeFile(filePath, csvContent, 'utf-8');
   } catch (error) {
-    throw new Error(`Error writing CSV file: ${error}`);
+    throw new Error(`Error writing CSV file: ${error}`, { cause: error });
   }
 }

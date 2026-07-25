@@ -28,8 +28,11 @@ export class OrderManagement {
       const newOrder: Order = { id: this.orders.length + 1, item, price };
       this.validator.validate(newOrder);
       this.orders.push({ id: this.orders.length + 1, item, price });
-    } catch (error: any) {
-      throw new Error(`Failed to add order: ${error.message}`);
+    } catch (error: Error | unknown) {
+      throw new Error(
+        `Failed to add order: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        { cause: error },
+      );
     }
   }
   getOrder(id: number): Order | undefined {

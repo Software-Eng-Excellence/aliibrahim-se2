@@ -9,7 +9,6 @@ import {
   ItemNotFoundException,
 } from '../util/exceptions/repostiroyException';
 import { hashPassword, verifyPassword } from '../util/password';
-import { id } from '../repository/IRepository';
 
 export class UserService {
   private readonly repo = new UserRepository();

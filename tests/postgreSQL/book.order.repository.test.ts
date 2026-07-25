@@ -13,11 +13,16 @@ import {
 
 const tableName = ItemCategory.BOOK;
 
-describe('BookRepository - PostgreSQL Integration Tests', () => {
+// These tests hit a real Postgres database (DATABASE_URL) and are skipped
+// in CI, where no such database is available; run them locally with a .env.
+const describeIfDb = process.env.DATABASE_URL ? describe : describe.skip;
+
+describeIfDb('BookRepository - PostgreSQL Integration Tests', () => {
   let repository: BookRepository;
-  const pool = ConnectionManager.getPool();
+  let pool: ReturnType<typeof ConnectionManager.getPool>;
 
   beforeAll(async () => {
+    pool = ConnectionManager.getPool();
     repository = new BookRepository();
     jest.setTimeout(15000); // 15-second buffer for Neon network latency
     await repository.init();

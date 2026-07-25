@@ -6,11 +6,16 @@ import {
 } from '../../src/model/builders/Toy.builder';
 import { ItemNotFoundException } from '../../src/util/exceptions/repostiroyException';
 
-describe('ToyRepository - Streamlined Integration Tests', () => {
+// These tests hit a real Postgres database (DATABASE_URL) and are skipped
+// in CI, where no such database is available; run them locally with a .env.
+const describeIfDb = process.env.DATABASE_URL ? describe : describe.skip;
+
+describeIfDb('ToyRepository - Streamlined Integration Tests', () => {
   let repository: ToyRepository;
-  const pool = ConnectionManager.getPool();
+  let pool: ReturnType<typeof ConnectionManager.getPool>;
 
   beforeAll(async () => {
+    pool = ConnectionManager.getPool();
     repository = new ToyRepository();
     jest.setTimeout(15000);
     await repository.init();
